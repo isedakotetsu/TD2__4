@@ -10,20 +10,20 @@ void Player::Initialize(Model* model, Camera* camera, const Vector3& position) {
 
 	model_ = model;
 	camera_ = camera;
-
 	worldTransform_.Initialize();
 	const float kPlayerScale = 10.0f;
-	worldTransform_.scale_ = {kPlayerScale, kPlayerScale, kPlayerScale};
-	worldTransform_.translation_ = position;
-	camera_->Initialize();
+	worldTransform_.scale_ = { kPlayerScale, kPlayerScale, kPlayerScale };
+	worldTransform_.translation_ = position;	//camera_->Initialize();
 	worldTransform_.rotation_.y = 0.95f * std::numbers::pi_v<float>;
-	worldTransform_.translation_.x = -2.0f;
-	worldTransform_.translation_.y = -10.0f;
-
+	/*worldTransform_.translation_.x = -2.0f;
+	worldTransform_.translation_.y = -10.0f;*/
+	worldTransform_.TransferMatrix();
 	// 最初の待機時間
-	idleCooldown_ = kIdleCooldownMin + (float(rand()) / RAND_MAX) * (kIdleCooldownMax - kIdleCooldownMin);
+	upData = new UpData();
+	idleCooldown_ = kIdleCooldownMin +
+		(float(rand()) / RAND_MAX) *
+		(kIdleCooldownMax - kIdleCooldownMin);
 }
-
 Vector3 Player::GetWorldPosition() const {
 
 	Vector3 worldPos;
@@ -35,6 +35,7 @@ Vector3 Player::GetWorldPosition() const {
 }
 
 void Player::UpDate() {
+
 	float deltaTime = 1.0f / 60.0f;
 	lookTimer_ += deltaTime;
 
@@ -54,7 +55,8 @@ void Player::UpDate() {
 		float t = lookTimer_ / kLookStartTime;
 		t = std::clamp(t, 0.0f, 1.0f);
 
-		worldTransform_.rotation_.y = 0.95f * std::numbers::pi_v<float> - kLookAngle * t;
+		worldTransform_.rotation_.y =
+			0.95f * std::numbers::pi_v<float> -kLookAngle * t;
 
 		if (lookTimer_ >= kLookStartTime) {
 			lookTimer_ = 0.0f;
@@ -77,19 +79,29 @@ void Player::UpDate() {
 		float t = lookTimer_ / kLookEndTime;
 		t = std::clamp(t, 0.0f, 1.0f);
 
-		worldTransform_.rotation_.y = (0.95f * std::numbers::pi_v<float> - kLookAngle) + kLookAngle * t;
+		worldTransform_.rotation_.y =
+			(0.95f * std::numbers::pi_v<float> -kLookAngle) +
+			kLookAngle * t;
 
 		if (lookTimer_ >= kLookEndTime) {
 
 			lookTimer_ = 0.0f;
 			lookState_ = LookState::kIdle;
 
-			// 次の待機時間
-			idleCooldown_ = kIdleCooldownMin + (float(rand()) / RAND_MAX) * (kIdleCooldownMax - kIdleCooldownMin);
+			idleCooldown_ = kIdleCooldownMin +
+				(float(rand()) / RAND_MAX) *
+				(kIdleCooldownMax - kIdleCooldownMin);
 		}
 
 	} break;
 	}
+
+	upData->WorldTransformUpData(worldTransform_);
 }
 
-void Player::Draw() { model_->Draw(worldTransform_, *camera_); }
+void Player::Draw()
+{
+	// 描画前処理（カリングモード、ブレンドモード、デプステストモードはデフォルト値）
+
+	model_->Draw(worldTransform_, *camera_);
+}

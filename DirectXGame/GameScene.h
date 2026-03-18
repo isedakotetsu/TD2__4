@@ -1,7 +1,8 @@
 #pragma once
 #include <KamataEngine.h>
 #include "UpData.h"
-#include "CameraController.h"
+//#include "CameraController.h"
+#include "Player.h"
 
 using namespace KamataEngine;
 
@@ -46,7 +47,7 @@ private:
 	//////3Dモデル
 	KamataEngine::Model* model_ = nullptr;
 
-	KamataEngine::Model* playerModel_ = nullptr;
+	//KamataEngine::Model* playerModel_ = nullptr;
 
 	KamataEngine::WorldTransform worldTransform_;
 
@@ -66,5 +67,9 @@ private:
 	// メニュー選択
 	int pauseSelection_ = 0;
 
-	CameraController* CController_ = nullptr;
+	//CameraController* CController_ = nullptr;
+
+	// キャラクターの当たり判定サイズ
+	static inline const float kWidth = 0.8f;
+	static inline const float kHeight = 0.8f;
 };

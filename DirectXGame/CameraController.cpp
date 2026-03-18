@@ -10,15 +10,15 @@ void CameraController::Initialize(Camera* camera) { camera_ = camera; }
 
 void CameraController::Updata() {
 	// 追従対象のワールドトランスフォームを参照
-	const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
+	//const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
 
-	const Vector3& targetVelocity = target_->GetVelocity();
+	//const Vector3& targetVelocity = target_->GetVelocity();
 
-	// 追従対象とオフセットからカメラの目標座標を計算
-	targetCoordinates_ = targetWorldTransform.translation_ + targetOffset_ + targetVelocity * kVelocityBias;
+	//// 追従対象とオフセットからカメラの目標座標を計算
+	//targetCoordinates_ = targetWorldTransform.translation_ + targetOffset_ + targetVelocity * kVelocityBias;
 
-	// 座標補間によりゆったり追従
-	camera_->translation_ = Lerp(camera_->translation_, targetCoordinates_, kInterpolationRate);
+	//// 座標補間によりゆったり追従
+	//camera_->translation_ = Lerp(camera_->translation_, targetCoordinates_, kInterpolationRate);
 
 	// 追従対象とオフセットからカメラの座標を計算
 	// camera_->translation_ = operator+(targetWorldTransform.translation_, targetOffset_);
