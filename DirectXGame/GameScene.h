@@ -3,6 +3,7 @@
 #include "UpData.h"
 //#include "CameraController.h"
 #include "Player.h"
+#include "playerHandLeft.h"
 
 using namespace KamataEngine;
 
@@ -58,6 +59,10 @@ private:
 	Player* player_ = nullptr;
 
 	KamataEngine::Model* modelPlayer_ = nullptr;
+
+	//playerHandLeft
+	PlayerHandLeft* playerHandLeft = nullptr;
+	KamataEngine::Model* modelPlayerHandLeft_ = nullptr;
 
 	UpData* upData = nullptr;
 
