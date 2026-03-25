@@ -8,13 +8,15 @@ using namespace KamataEngine;
 void Player::Initialize(Model* model, Camera* camera, const Vector3& position) {
 	assert(model);
 
+
+	srand((unsigned int)time(nullptr));
 	model_ = model;
 	camera_ = camera;
 	worldTransform_.Initialize();
 	const float kPlayerScale = 10.0f;
 	worldTransform_.scale_ = { kPlayerScale, kPlayerScale, kPlayerScale };
 	worldTransform_.translation_ = position;	//camera_->Initialize();
-	worldTransform_.rotation_.y = 0.95f * std::numbers::pi_v<float>;
+	worldTransform_.rotation_.y = std::numbers::pi_v<float>;
 	/*worldTransform_.translation_.x = -2.0f;
 	worldTransform_.translation_.y = -10.0f;*/
 	worldTransform_.TransferMatrix();
@@ -34,6 +36,12 @@ Vector3 Player::GetWorldPosition() const {
 	return worldPos;
 }
 
+bool Player::IsLooking() const {
+	return lookState_ == LookState::kLookStart ||
+		lookState_ == LookState::kLooking ||
+		lookState_ == LookState::kLookEnd;
+}
+
 void Player::UpDate() {
 
 	float deltaTime = 1.0f / 60.0f;
@@ -46,6 +54,7 @@ void Player::UpDate() {
 		if (lookTimer_ > idleCooldown_) {
 			lookTimer_ = 0.0f;
 			lookState_ = LookState::kLookStart;
+			isLooked_ = true;
 		}
 
 		break;
@@ -87,7 +96,7 @@ void Player::UpDate() {
 
 			lookTimer_ = 0.0f;
 			lookState_ = LookState::kIdle;
-
+			isLooked_ = false;
 			idleCooldown_ = kIdleCooldownMin +
 				(float(rand()) / RAND_MAX) *
 				(kIdleCooldownMax - kIdleCooldownMin);

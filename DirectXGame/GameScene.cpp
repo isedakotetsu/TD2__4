@@ -75,6 +75,21 @@ void GameScene::UpDate()
 {
 	player_->UpDate();
 	camera_.UpdateMatrix();
+
+	Input* input = Input::GetInstance();
+	// Spaceキー押した瞬間
+	if (input->TriggerKey(DIK_SPACE)) {
+
+		// プレイヤーが振り向いてたら
+		if (player_->IsLooking()) {
+
+			// ゲームオーバー処理
+			player_->IsDead();
+		}
+		else {
+			!player_->IsDead();
+		}
+	}
 	//CController_->Updata();
 }
 

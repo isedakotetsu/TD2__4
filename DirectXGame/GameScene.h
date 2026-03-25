@@ -3,6 +3,7 @@
 #include "UpData.h"
 //#include "CameraController.h"
 #include "Player.h"
+#include <input/Input.h>
 
 using namespace KamataEngine;
 
