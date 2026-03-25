@@ -2,6 +2,7 @@
 #include <KamataEngine.h>
 #include "UpData.h"
 #include "CameraController.h"
+#include "Sumaho.h"
 
 using namespace KamataEngine;
 
@@ -52,6 +53,11 @@ private:
 
 	////カメラ
 	KamataEngine::Camera camera_;
+
+	KamataEngine::ModelCommon* modelCommon_ = nullptr;
+
+	Sumaho* sumaho_ = nullptr;
+	KamataEngine::Model* sumahoModel_ = nullptr;
 
 	// 自キャラ
 	Player* player_ = nullptr;
