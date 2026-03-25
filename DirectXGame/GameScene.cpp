@@ -86,9 +86,6 @@ void GameScene::UpDate()
 			// ゲームオーバー処理
 			player_->IsDead();
 		}
-		else {
-			!player_->IsDead();
-		}
 	}
 	//CController_->Updata();
 }
