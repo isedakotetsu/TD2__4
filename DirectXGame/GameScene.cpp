@@ -42,7 +42,7 @@ void GameScene::Initialize()
 
 	modelPlayerHandLeft_ = Model::CreateFromOBJ("playerHandLeft", true);
 
-	Vector3 playerHandLeftPos = { -2.0f,0.0f,-4.0f };
+	Vector3 playerHandLeftPos = { -2.0f,0.5f,-4.3f };
 
 	playerHandLeft->Initialize(modelPlayerHandLeft_, &camera_, playerHandLeftPos);
 

@@ -18,5 +18,10 @@ private:
 	UpData* updatetransform_ = nullptr;
 
 	KamataEngine::Camera* camera_ = nullptr;
+
+	float time_ = 0.0f;
+	float amplitude_ = 0.2f; // 上下の幅
+	float speed_ = 10.0f;     // 動く速さ
+	KamataEngine::Vector3 basePosition_;
 };
 
