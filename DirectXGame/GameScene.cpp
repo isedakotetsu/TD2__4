@@ -7,6 +7,7 @@ GameScene::~GameScene() {
 	delete player_;
 	delete playerHandLeft;
 	delete modelPlayerHandLeft_;
+	delete modelPc_;
 	player_ = nullptr;
 	//delete CController_;
 }
@@ -41,9 +42,21 @@ void GameScene::Initialize()
 
 	modelPlayerHandLeft_ = Model::CreateFromOBJ("playerHandLeft", true);
 
-	Vector3 playerHandLeftPos = { -5.0f,0.0f,0.0f };
+	Vector3 playerHandLeftPos = { -2.0f,0.0f,-4.0f };
 
 	playerHandLeft->Initialize(modelPlayerHandLeft_, &camera_, playerHandLeftPos);
+
+	//PCモデル
+	pc_ = new PC();
+
+	modelPc_ = Model::CreateFromOBJ("PC", true);
+
+	Vector3 PcPos= { 0.0f,0.0f,-3.0f };
+
+	pc_->Initialize(modelPc_, &camera_, PcPos);
+
+
+
 
 	//CController_ = new CameraController();
 
@@ -86,6 +99,7 @@ void GameScene::UpDate()
 {
 	player_->UpDate();
 	playerHandLeft->Update();
+	pc_->Update();
 	camera_.UpdateMatrix();
 	//CController_->Updata();
 }
@@ -99,5 +113,6 @@ void GameScene::Draw()
 
 	player_->Draw();
 	playerHandLeft->Draw();
+	pc_->Draw();
 	Model::PostDraw();
 }
