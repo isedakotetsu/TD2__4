@@ -64,8 +64,10 @@ void Player::UpDate() {
 		float t = lookTimer_ / kLookStartTime;
 		t = std::clamp(t, 0.0f, 1.0f);
 
+		// 振り向き → 正面に戻る
 		worldTransform_.rotation_.y =
-			0.95f * std::numbers::pi_v<float> -kLookAngle * t;
+			(0.95f * std::numbers::pi_v<float> -kLookAngle) +
+			kLookAngle * t;
 
 		if (lookTimer_ >= kLookStartTime) {
 			lookTimer_ = 0.0f;
@@ -88,8 +90,9 @@ void Player::UpDate() {
 		float t = lookTimer_ / kLookEndTime;
 		t = std::clamp(t, 0.0f, 1.0f);
 
+		// 正面 → 振り向く
 		worldTransform_.rotation_.y =
-			(0.95f * std::numbers::pi_v<float> -kLookAngle) +
+			0.95f * std::numbers::pi_v<float> -
 			kLookAngle * t;
 
 		if (lookTimer_ >= kLookEndTime) {

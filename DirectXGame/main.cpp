@@ -15,14 +15,13 @@ GameOver* gameOverScene = nullptr;
 enum class Scene {
 	kUnknown = 0,
 	kTitle,
-	kOperate,
 	kGame,
 	kGameOver,
 	kGameClear,
 };
 
 // 現在シーン（型）
-Scene scene = Scene::kUnknown;
+Scene scene = Scene::kTitle;
 
 void ChangeScene() {
 
@@ -103,6 +102,23 @@ void ChangeScene() {
 	}
 }
 
+void DrawScene() {
+	switch (scene) {
+	case Scene::kTitle:
+		titleScene->Draw();
+		break;
+	case Scene::kGame:
+		gameScene->Draw();
+		break;
+	case Scene::kGameOver:
+		gameOverScene->Draw();
+		break;
+	case Scene::kGameClear:
+		gameClearScene->Draw();
+		break;
+	}
+}
+
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
@@ -112,8 +128,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	// DirectXCommonインスタンスの取得
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 
-	gameScene = new GameScene;
-	gameScene->Initialize();
+	/*gameScene = new GameScene;
+	gameScene->Initialize();*/
+
+	titleScene = new TitleScene;
+	titleScene->Initialize();
 
 	// メインループ
 	while (true) {
@@ -121,19 +140,39 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		if (Update()) {
 			break;
 		}
-		gameScene->UpDate();
+
+		// シーンごとにUpdate
+		switch (scene) {
+		case Scene::kTitle:
+			titleScene->UpDate();
+			break;
+		case Scene::kGame:
+			gameScene->UpDate();
+			break;
+		case Scene::kGameOver:
+			gameOverScene->UpDate();
+			break;
+		case Scene::kGameClear:
+			gameClearScene->UpDate();
+			break;
+		}
+                    
+		ChangeScene();
 
 		// 描画開始
 		dxCommon->PreDraw();
 
-		gameScene->Draw();
+		DrawScene();
 
 		// 描画終了
 		dxCommon->PostDraw();
 	}
 
+	delete titleScene;
 	delete gameScene;
-
+	delete gameOverScene;
+	delete gameClearScene;
+	gameScene = nullptr;
 	// エンジンの終了処理
 	Finalize();
 

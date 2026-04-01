@@ -37,6 +37,8 @@ public:
 
 	//死亡フラグ
 	bool IsDead() const { return isDead_; }
+
+	void SetDead() { isDead_ = true; }
 private:
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
@@ -66,7 +68,7 @@ private:
 	static inline const float kLookingTime = 0.5f;//見続ける時間
 	static inline const float kLookEndTime = 0.3f;//元に戻るまでの時間
 	static inline const float kIdleCooldownMin = 0.5f;
-	static inline const float kIdleCooldownMax = 5.0f;
+	static inline const float kIdleCooldownMax = 10.0f;
 	static inline const float kLookCycle = 2.0f;    // 1周期あたりの時間（秒）
 	static inline const float kMaxLookAngle = 0.4f; // 最大角度（ラジアン）※約23度
 	float idleCooldown_ = 0.0f;//次のチラ見までの待機時間

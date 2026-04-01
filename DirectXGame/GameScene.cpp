@@ -9,7 +9,7 @@ GameScene::~GameScene() {
 	//delete CController_;
 }
 
-void GameScene::Initialize() 
+void GameScene::Initialize()
 {
 
 	model_ = Model::Create();
@@ -71,7 +71,7 @@ AABB GameScene::GetAABB() {
 	return aabb;
 }
 
-void GameScene::UpDate() 
+void GameScene::UpDate()
 {
 	player_->UpDate();
 	camera_.UpdateMatrix();
@@ -83,14 +83,30 @@ void GameScene::UpDate()
 		// プレイヤーが振り向いてたら
 		if (player_->IsLooking()) {
 
-			// ゲームオーバー処理
-			player_->IsDead();
+			//player_->SetDead();
+			isCaught_ = true;
+			catchTimer_ = 0.0f; // ←初期化
 		}
 	}
+
+	if (isCaught_) {
+
+		catchTimer_ += 1.0f / 60.0f;
+
+		// カメラ前進
+		camera_.translation_.z += 0.5f;
+
+		// 👇ここで判定！！
+		if (camera_.translation_.z > 20.0f) {
+
+			player_->SetDead();  // ←ここに移動
+		}
+	}
+
 	//CController_->Updata();
 }
 
-void GameScene::Draw() 
+void GameScene::Draw()
 {
 	//DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 

@@ -26,6 +26,10 @@ public:
 	//クリアしたことを感知する関数
 	bool IsClear() const { return phase_ == Phase::kClear; }
 
+	bool IsFinished() const { return player_->IsDead(); }
+
+
+
 	//ワールド座標を取得
 	KamataEngine::Vector3 GetWorldPosition() const;
 
@@ -68,9 +72,15 @@ private:
 	// メニュー選択
 	int pauseSelection_ = 0;
 
+	bool finished_ = false;
+
 	//CameraController* CController_ = nullptr;
 
 	// キャラクターの当たり判定サイズ
 	static inline const float kWidth = 0.8f;
 	static inline const float kHeight = 0.8f;
+
+	//ばれたらカメラが近づいてくるフラグ
+	bool isCaught_ = false;
+	float catchTimer_ = 0.0f;
 };
