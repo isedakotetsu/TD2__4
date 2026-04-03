@@ -10,6 +10,8 @@ GameScene* gameScene = nullptr;
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
+	
+
 	// エンジンの初期化
 	Initialize(L"先生にばれずにさぼる");
 
@@ -19,12 +21,20 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	gameScene = new GameScene;
 	gameScene->Initialize();
 
+	const int width = 1280;
+	const int height = 720;
+	const int frameSize = width * height * 4;
+
+	std::vector<unsigned char> buffer(frameSize);
+
 	// メインループ
 	while (true) {
 		// エンジンの更新
 		if (Update()) {
 			break;
 		}
+
+
 		gameScene->UpDate();
 
 		// 描画開始

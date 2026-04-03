@@ -1,13 +1,16 @@
 #include "GameScene.h"
 #include "KamataEngine.h"
 #include "Player.h"
+#include <filesystem> 
+
+
 
 GameScene::~GameScene() {
 	delete modelPlayer_;
 	delete player_;
 	delete playerHandLeft;
 	delete modelPlayerHandLeft_;
-	delete modelPc_;
+	delete sprite_;
 	player_ = nullptr;
 	//delete CController_;
 }
@@ -55,6 +58,28 @@ void GameScene::Initialize()
 
 	pc_->Initialize(modelPc_, &camera_, PcPos);
 
+	//gif動画
+	for (int i = 1; i <= 100; i++) {
+		char file[256];
+		sprintf_s(file, "gif_frames/frame_%03d.png", i);
+
+		// デバッグ（重要）
+		printf("check: %s\n", file);
+
+		if (!std::filesystem::exists(std::string("Resources/") + file)) {
+			break;
+		}
+
+		uint32_t tex = TextureManager::Load(file);
+		frames_.push_back(tex);
+	}
+
+	frameCount_ = static_cast<int>(frames_.size());
+
+	if (!frames_.empty()) {
+		sprite_ = Sprite::Create(frames_[0], { 0, 0 });
+		sprite_->SetSize({ 300, 300 });
+	}
 
 
 
@@ -95,24 +120,41 @@ AABB GameScene::GetAABB() {
 	return aabb;
 }
 
-void GameScene::UpDate() 
+void GameScene::UpDate()
 {
 	player_->UpDate();
 	playerHandLeft->Update();
 	pc_->Update();
+
+	static int timer = 0;
+	timer++;
+
+	if (!frames_.empty()) {
+
+		if (timer % 3 == 0) {
+			frameIndex_++;
+			if (frameIndex_ >= frameCount_) {
+				frameIndex_ = 0;
+			}
+		}
+
+		sprite_->SetTextureHandle(frames_[frameIndex_]);
+	}
 	camera_.UpdateMatrix();
-	//CController_->Updata();
 }
 
-void GameScene::Draw() 
+void GameScene::Draw()
 {
-	//DirectXCommon* dxCommon = DirectXCommon::GetInstance();
-
-	// 修正: PreDrawの引数を正しく指定
 	Model::PreDraw();
 
 	player_->Draw();
 	playerHandLeft->Draw();
 	pc_->Draw();
+
 	Model::PostDraw();
+
+	Sprite::PreDraw();
+	sprite_->Draw();
+	Sprite::PostDraw();
+
 }
