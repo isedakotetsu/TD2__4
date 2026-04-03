@@ -36,9 +36,9 @@ void GameScene::UpDate()
     }
 
     // 線形補間でヌルっと動かす（0.1fの部分を大きくすると速くなります）
-    sumaho_->worldTransform_.translation_.x += (targetPos.x - sumaho_->worldTransform_.translation_.x) * 0.1f;
-    sumaho_->worldTransform_.translation_.y += (targetPos.y - sumaho_->worldTransform_.translation_.y) * 0.1f;
-    sumaho_->worldTransform_.translation_.z += (targetPos.z - sumaho_->worldTransform_.translation_.z) * 0.1f;
+    sumaho_->worldTransform_.translation_.x += (targetPos.x - sumaho_->worldTransform_.translation_.x) * 0.5f;
+    sumaho_->worldTransform_.translation_.y += (targetPos.y - sumaho_->worldTransform_.translation_.y) * 0.5f;
+    sumaho_->worldTransform_.translation_.z += (targetPos.z - sumaho_->worldTransform_.translation_.z) * 0.5f;
 
     sumaho_->worldTransform_.rotation_.x += (targetRot.x - sumaho_->worldTransform_.rotation_.x) * 0.1f;
     sumaho_->worldTransform_.rotation_.y += (targetRot.y - sumaho_->worldTransform_.rotation_.y) * 0.1f;
