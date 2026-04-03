@@ -78,7 +78,7 @@ void GameScene::UpDate()
 
 	Input* input = Input::GetInstance();
 	// Spaceキー押した瞬間
-	if (input->TriggerKey(DIK_SPACE)) {
+	if (input->PushKey(DIK_SPACE)) {
 
 		// プレイヤーが振り向いてたら
 		if (player_->IsLooking()) {

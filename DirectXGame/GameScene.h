@@ -83,4 +83,6 @@ private:
 	//ばれたらカメラが近づいてくるフラグ
 	bool isCaught_ = false;
 	float catchTimer_ = 0.0f;
+
+	//
 };
