@@ -86,6 +86,7 @@ void GameScene::UpDate()
 			//player_->SetDead();
 			isCaught_ = true;
 			catchTimer_ = 0.0f; // ←初期化
+			player_->SetStopLook(true);
 		}
 	}
 
@@ -101,6 +102,7 @@ void GameScene::UpDate()
 
 			player_->SetDead();  // ←ここに移動
 		}
+		player_->SetStopLook(true);
 	}
 
 	//CController_->Updata();

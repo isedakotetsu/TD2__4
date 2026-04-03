@@ -47,65 +47,68 @@ void Player::UpDate() {
 	float deltaTime = 1.0f / 60.0f;
 	lookTimer_ += deltaTime;
 
-	switch (lookState_) {
+	if (!isStopLook_) {
 
-	case LookState::kIdle:
+		switch (lookState_) {
 
-		if (lookTimer_ > idleCooldown_) {
-			lookTimer_ = 0.0f;
-			lookState_ = LookState::kLookStart;
-			isLooked_ = true;
+		case LookState::kIdle:
+
+			if (lookTimer_ > idleCooldown_) {
+				lookTimer_ = 0.0f;
+				lookState_ = LookState::kLookStart;
+				isLooked_ = true;
+			}
+
+			break;
+
+		case LookState::kLookStart: {
+
+			float t = lookTimer_ / kLookStartTime;
+			t = std::clamp(t, 0.0f, 1.0f);
+
+			// 振り向き → 正面に戻る
+			worldTransform_.rotation_.y =
+				(0.95f * std::numbers::pi_v<float> -kLookAngle) +
+				kLookAngle * t;
+
+			if (lookTimer_ >= kLookStartTime) {
+				lookTimer_ = 0.0f;
+				lookState_ = LookState::kLooking;
+			}
+
+		} break;
+
+		case LookState::kLooking:
+
+			if (lookTimer_ >= kLookingTime) {
+				lookTimer_ = 0.0f;
+				lookState_ = LookState::kLookEnd;
+			}
+
+			break;
+
+		case LookState::kLookEnd: {
+
+			float t = lookTimer_ / kLookEndTime;
+			t = std::clamp(t, 0.0f, 1.0f);
+
+			// 正面 → 振り向く
+			worldTransform_.rotation_.y =
+				0.95f * std::numbers::pi_v<float> -
+				kLookAngle * t;
+
+			if (lookTimer_ >= kLookEndTime) {
+
+				lookTimer_ = 0.0f;
+				lookState_ = LookState::kIdle;
+				isLooked_ = false;
+				idleCooldown_ = kIdleCooldownMin +
+					(float(rand()) / RAND_MAX) *
+					(kIdleCooldownMax - kIdleCooldownMin);
+			}
+
+		} break;
 		}
-
-		break;
-
-	case LookState::kLookStart: {
-
-		float t = lookTimer_ / kLookStartTime;
-		t = std::clamp(t, 0.0f, 1.0f);
-
-		// 振り向き → 正面に戻る
-		worldTransform_.rotation_.y =
-			(0.95f * std::numbers::pi_v<float> -kLookAngle) +
-			kLookAngle * t;
-
-		if (lookTimer_ >= kLookStartTime) {
-			lookTimer_ = 0.0f;
-			lookState_ = LookState::kLooking;
-		}
-
-	} break;
-
-	case LookState::kLooking:
-
-		if (lookTimer_ >= kLookingTime) {
-			lookTimer_ = 0.0f;
-			lookState_ = LookState::kLookEnd;
-		}
-
-		break;
-
-	case LookState::kLookEnd: {
-
-		float t = lookTimer_ / kLookEndTime;
-		t = std::clamp(t, 0.0f, 1.0f);
-
-		// 正面 → 振り向く
-		worldTransform_.rotation_.y =
-			0.95f * std::numbers::pi_v<float> -
-			kLookAngle * t;
-
-		if (lookTimer_ >= kLookEndTime) {
-
-			lookTimer_ = 0.0f;
-			lookState_ = LookState::kIdle;
-			isLooked_ = false;
-			idleCooldown_ = kIdleCooldownMin +
-				(float(rand()) / RAND_MAX) *
-				(kIdleCooldownMax - kIdleCooldownMin);
-		}
-
-	} break;
 	}
 
 	upData->WorldTransformUpData(worldTransform_);

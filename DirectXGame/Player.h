@@ -39,6 +39,8 @@ public:
 	bool IsDead() const { return isDead_; }
 
 	void SetDead() { isDead_ = true; }
+
+	void SetStopLook(bool flag) { isStopLook_ = flag; }
 private:
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
@@ -78,4 +80,6 @@ private:
 
 	// デスフラグ
 	bool isDead_ = false;
+
+	bool isStopLook_ = false;
 };
