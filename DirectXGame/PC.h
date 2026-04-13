@@ -2,6 +2,7 @@
 #include "KamataEngine.h"
 #include "Math.h"
 #include "UpData.h"
+using namespace KamataEngine;
 
 class PC
 {
@@ -19,4 +20,8 @@ private:
 	UpData* updatetransform_ = nullptr;
 
 	KamataEngine::Camera* camera_ = nullptr;
+
+	
+
+
 };

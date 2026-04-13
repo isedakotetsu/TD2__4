@@ -1,4 +1,6 @@
 #include "PC.h"
+#include <filesystem> 
+
 
 void PC::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3& position)
 {
@@ -12,10 +14,12 @@ void PC::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, co
 	camera_ = camera;
 
 
+
 }
 
 void PC::Update()
 {
+
 	updatetransform_->WorldTransformUpData(worldTransform_);
 }
 

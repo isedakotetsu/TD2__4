@@ -59,45 +59,43 @@ void GameScene::Initialize()
 	pc_->Initialize(modelPc_, &camera_, PcPos);
 
 	//gif動画
+	//ゲームgif
 	for (int i = 1; i <= 100; i++) {
 		char file[256];
 		sprintf_s(file, "gif_frames/frame_%03d.png", i);
-
-		// デバッグ（重要）
-		printf("check: %s\n", file);
 
 		if (!std::filesystem::exists(std::string("Resources/") + file)) {
 			break;
 		}
 
-		uint32_t tex = TextureManager::Load(file);
-		frames_.push_back(tex);
+		framesA_.push_back(TextureManager::Load(file));
 	}
 
-	frameCount_ = static_cast<int>(frames_.size());
+	//勉強gif
+	for (int i = 1; i <= 100; i++) {
+		char file[256];
+		sprintf_s(file, "gif_frames2/frame2_%03d.png", i);
 
-	if (!frames_.empty()) {
-		sprite_ = Sprite::Create(frames_[0], { 0, 0 });
-		sprite_->SetSize({ 220, 130 });
-		sprite_->SetPosition({ 535, 400 });
+		if (!std::filesystem::exists(std::string("Resources/") + file)) 
+		{
+			break;
+		}
+
+		framesB_.push_back(TextureManager::Load(file));
 	}
 
+	// 初期状態画面
+	currentFrames_ = &framesA_;
+	frameCount_ = static_cast<int>(currentFrames_->size());
 
-
-	//CController_ = new CameraController();
-
-	//CController_->Initialize(&camera_);//初期化
-
-	//CController_->SetTarget(player_);//追従対象セット
-
-	//CController_->Reset();//リセット
-
-	/*CameraController::Rect cameraArea = { 12.0f,100.0f - 12.0f,0.0f,0.0f };
-
-	CController_->SetMovableArea(cameraArea);*/
+	if (!currentFrames_->empty()) 
+	{
+		sprite_ = Sprite::Create((*currentFrames_)[0], { 0, 0 });
+	}
 
 	upData = new UpData();
-	//upData->WorldTransformUpData(player_->GetWorldTransform());
+
+	
 }
 
 Vector3 GameScene::GetWorldPosition() const {
@@ -127,19 +125,49 @@ void GameScene::UpDate()
 	playerHandLeft->Update();
 	pc_->Update();
 
+	//画面切り替え
+	if (KamataEngine::Input::GetInstance()->TriggerKey(DIK_SPACE))
+	{
+		isGifA_ = !isGifA_;
+
+		if (isGifA_) {
+			currentFrames_ = &framesA_;
+
+			if (!framesA_.empty()) {
+				sprite_->SetTextureHandle(framesA_[0]);
+			}
+
+		} else {
+			currentFrames_ = &framesB_;
+
+			if (!framesB_.empty()) {
+				sprite_->SetTextureHandle(framesB_[0]);
+			}
+		}
+
+		frameIndex_ = 0;
+		frameCount_ = static_cast<int>(currentFrames_->size());
+	}
+
+
 	static int timer = 0;
 	timer++;
 
-	if (!frames_.empty()) {
+	if (currentFrames_ && !currentFrames_->empty()) 
+	{
 
-		if (timer % 3 == 0) {
+		if (timer % 3 == 0)
+		{
 			frameIndex_++;
-			if (frameIndex_ >= frameCount_) {
+			if (frameIndex_ >= frameCount_) 
+			{
 				frameIndex_ = 0;
 			}
 		}
 
-		sprite_->SetTextureHandle(frames_[frameIndex_]);
+		sprite_->SetTextureHandle((*currentFrames_)[frameIndex_]);
+		sprite_->SetSize({ 220, 130 });
+		sprite_->SetPosition({ 535, 400 });
 	}
 	camera_.UpdateMatrix();
 }
@@ -157,5 +185,7 @@ void GameScene::Draw()
 	Sprite::PreDraw();
 	sprite_->Draw();
 	Sprite::PostDraw();
+
+	
 
 }

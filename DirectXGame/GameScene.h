@@ -90,9 +90,14 @@ private:
 	static inline const float kHeight = 0.8f;
 
 
-	std::vector<uint32_t> frames_;
+	std::vector<uint32_t> framesA_; // ゲームGIF
+	std::vector<uint32_t> framesB_; // 勉強GIF
+
+	std::vector<uint32_t>* currentFrames_ = nullptr;
+
 	int frameIndex_ = 0;
 	int frameCount_ = 0;
+	bool isGifA_ = true;
 
 	
 };
