@@ -78,7 +78,8 @@ void GameScene::Initialize()
 
 	if (!frames_.empty()) {
 		sprite_ = Sprite::Create(frames_[0], { 0, 0 });
-		sprite_->SetSize({ 300, 300 });
+		sprite_->SetSize({ 220, 130 });
+		sprite_->SetPosition({ 535, 400 });
 	}
 
 
