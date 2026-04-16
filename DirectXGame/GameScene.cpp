@@ -25,7 +25,7 @@ void GameScene::UpDate()
     Vector3 targetPos;
     Vector3 targetRot;
 
-    if (input->PushKey(DIK_SPACE)) {
+    if (input->PushKey(DIK_E)) {
         // 【スペース押し：手元に立てる】
         targetPos = { 10.0f, 0.0f, -5.0f };
         targetRot = { 0.2f, 0.0f, 0.0f }; // 少しだけ手前に傾ける
