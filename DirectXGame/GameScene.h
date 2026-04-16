@@ -1,7 +1,6 @@
 #pragma once
 #include <KamataEngine.h>
 #include "UpData.h"
-//#include "CameraController.h"
 #include "Player.h"
 #include "playerHandLeft.h"
 #include "PC.h"
@@ -83,7 +82,7 @@ private:
 	// メニュー選択
 	int pauseSelection_ = 0;
 
-	//CameraController* CController_ = nullptr;
+	
 
 	// キャラクターの当たり判定サイズ
 	static inline const float kWidth = 0.8f;
