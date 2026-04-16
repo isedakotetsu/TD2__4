@@ -84,5 +84,21 @@ private:
 	bool isCaught_ = false;
 	float catchTimer_ = 0.0f;
 
-	//
+	//スコア
+	int score_ = 0;
+
+	int scoreCount_ = 100;
+
+	/*========EVENT==========*/
+
+	int gameTime = 10800; //ゲームプレイ時間
+	int nextEventTime_ = 0;     // 次に発生する時間
+	int eventCount = 3;  //イベント回数
+	bool isEventActive_ = false; //イベントが発生するフラグ
+	int eventTimer_ = 0; //イベント継続時間
+
+	KamataEngine::Sprite* flashSprite_ = nullptr;
+	Vector4 flashColor_ = { 1,1,1,0 }; 
+
+	int gameTimer_ = 0;
 };

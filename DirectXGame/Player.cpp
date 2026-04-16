@@ -16,7 +16,7 @@ void Player::Initialize(Model* model, Camera* camera, const Vector3& position) {
 	const float kPlayerScale = 10.0f;
 	worldTransform_.scale_ = { kPlayerScale, kPlayerScale, kPlayerScale };
 	worldTransform_.translation_ = position;	//camera_->Initialize();
-	worldTransform_.rotation_.y = std::numbers::pi_v<float>;
+	worldTransform_.rotation_.y = 0.0f;
 	/*worldTransform_.translation_.x = -2.0f;
 	worldTransform_.translation_.y = -10.0f;*/
 	worldTransform_.TransferMatrix();
@@ -37,9 +37,11 @@ Vector3 Player::GetWorldPosition() const {
 }
 
 bool Player::IsLooking() const {
-	return lookState_ == LookState::kLookStart ||
-		lookState_ == LookState::kLooking ||
-		lookState_ == LookState::kLookEnd;
+	return lookState_ == LookState::kLooking ||lookState_ == LookState::kLookEnd;
+}
+
+bool Player::IsBackingWards()const {
+	return lookState_ == LookState::kLookEnd;
 }
 
 void Player::UpDate() {
@@ -93,12 +95,19 @@ void Player::UpDate() {
 			t = std::clamp(t, 0.0f, 1.0f);
 
 			// 正面 → 振り向く
-			worldTransform_.rotation_.y =
+			/*worldTransform_.rotation_.y =
 				0.95f * std::numbers::pi_v<float> -
-				kLookAngle * t;
+				kLookAngle * t;*/
+
+			float startAngle = 0.95f * std::numbers::pi_v<float>; // 振り向き最大角
+			float endAngle = 0.0f; // 真後ろ
+
+
+			worldTransform_.rotation_.y =
+				startAngle * (1.0f - t) + endAngle * t;
 
 			if (lookTimer_ >= kLookEndTime) {
-
+				worldTransform_.rotation_.y = 0.0f;
 				lookTimer_ = 0.0f;
 				lookState_ = LookState::kIdle;
 				isLooked_ = false;

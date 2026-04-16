@@ -35,12 +35,18 @@ public:
 
 	bool IsLooking() const;
 
+	bool IsBackWards() const { return isBack_; }
+
+	bool IsBackingWards() const;
+
 	//死亡フラグ
 	bool IsDead() const { return isDead_; }
 
 	void SetDead() { isDead_ = true; }
 
 	void SetStopLook(bool flag) { isStopLook_ = flag; }
+
+	float GetRotationY() const { return worldTransform_.rotation_.y; }
 private:
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
@@ -82,4 +88,6 @@ private:
 	bool isDead_ = false;
 
 	bool isStopLook_ = false;
+
+	bool isBack_ = false;
 };
