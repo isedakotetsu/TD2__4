@@ -54,7 +54,7 @@ void GameScene::Initialize()
 
 	modelPc_ = Model::CreateFromOBJ("PC", true);
 
-	Vector3 PcPos= { 0.0f,0.0f,-3.0f };
+	Vector3 PcPos= { 0.0f,0.0f,-2.3f };
 
 	pc_->Initialize(modelPc_, &camera_, PcPos);
 
@@ -106,6 +106,15 @@ void GameScene::Initialize()
 	flashSprite_ = Sprite::Create(0, { 0, 0 });
 
 	flashSprite_->SetSize({ 1280, 720 });
+
+	//Tableモデル
+	table_ = new Table();
+
+	modelTable_ = Model::CreateFromOBJ("table", true);
+
+	Vector3 TablePos = { 0.0f,-2.1f,-3.0f };
+
+	table_->Initialize(modelTable_, &camera_, TablePos);
 }
 
 Vector3 GameScene::GetWorldPosition() const {
@@ -139,6 +148,7 @@ void GameScene::UpDate()
 	player_->UpDate();
 	playerHandLeft->Update();
 	pc_->Update();
+	table_->Update();
 
 	//画面切り替え
 	if (KamataEngine::Input::GetInstance()->TriggerKey(DIK_SPACE))
@@ -268,6 +278,7 @@ void GameScene::Draw()
 	player_->Draw();
 	playerHandLeft->Draw();
 	pc_->Draw();
+	table_->Draw();
 
 	Model::PostDraw();
 

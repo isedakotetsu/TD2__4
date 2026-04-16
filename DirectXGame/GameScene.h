@@ -5,6 +5,7 @@
 #include "playerHandLeft.h"
 #include "PC.h"
 #include <input/Input.h>
+#include "Table.h"
 
 
 
@@ -75,6 +76,11 @@ private:
 	//PCモデル
 	PC* pc_ = nullptr;
 	KamataEngine::Model* modelPc_ = nullptr;
+
+	//Tableモデル
+	Table* table_ = nullptr;
+	KamataEngine::Model* modelTable_ = nullptr;
+
 
 	
 	

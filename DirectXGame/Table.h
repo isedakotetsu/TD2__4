@@ -1,0 +1,27 @@
+#pragma once
+#include "KamataEngine.h"
+#include "Math.h"
+#include "UpData.h"
+using namespace KamataEngine;
+
+class Table
+{
+public:
+	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3& position);
+	void Update();
+	void Draw();
+
+
+private:
+	KamataEngine::WorldTransform worldTransform_;
+
+	KamataEngine::Model* model_ = nullptr;
+
+	UpData* updatetransform_ = nullptr;
+
+	KamataEngine::Camera* camera_ = nullptr;
+
+
+
+
+};

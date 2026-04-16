@@ -173,6 +173,7 @@
     <ClCompile Include="PC.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="playerHandLeft.cpp" />
+    <ClCompile Include="Table.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="UpData.cpp" />
   </ItemGroup>
@@ -283,6 +284,7 @@
     <ClInclude Include="PC.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="playerHandLeft.h" />
+    <ClInclude Include="Table.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="UpData.h" />
   </ItemGroup>
