@@ -15,7 +15,7 @@ GameScene::~GameScene() {
 	//delete CController_;
 }
 
-void GameScene::Initialize() 
+void GameScene::Initialize()
 {
 
 	model_ = Model::Create();
@@ -94,8 +94,18 @@ void GameScene::Initialize()
 	}
 
 	upData = new UpData();
+	//upData->WorldTransformUpData(player_->GetWorldTransform());
 
-	
+	gameTime = 10800; //ゲームプレイ時間
+	gameTimer_ = 0;
+	isEventActive_ = false;
+	eventTimer_ = 0;
+	// 最初のイベント時間をランダム設定（例：3秒〜10秒）
+	nextEventTime_ = rand() % 3600 + 3200; // 180〜600フレーム
+	//nextEventTime_ = rand() % 420 + 180; // 180〜600フレーム
+	flashSprite_ = Sprite::Create(0, { 0, 0 });
+
+	flashSprite_->SetSize({ 1280, 720 });
 }
 
 Vector3 GameScene::GetWorldPosition() const {
@@ -121,6 +131,11 @@ AABB GameScene::GetAABB() {
 
 void GameScene::UpDate()
 {
+
+	gameTime--;
+
+	gameTimer_++;
+
 	player_->UpDate();
 	playerHandLeft->Update();
 	pc_->Update();
@@ -170,6 +185,80 @@ void GameScene::UpDate()
 		sprite_->SetPosition({ 535, 400 });
 	}
 	camera_.UpdateMatrix();
+
+	Input* input = Input::GetInstance();
+	// Spaceキー押した瞬間
+	if (!isEventActive_ && input->PushKey(DIK_SPACE)) {
+
+		score_ += scoreCount_;
+
+		// プレイヤーが振り向いてたら
+		if (player_->IsLooking()) {
+
+			//player_->SetDead();
+			isCaught_ = true;
+			catchTimer_ = 0.0f; // ←初期化
+			player_->SetStopLook(true);
+			score_ -= scoreCount_;
+		}
+	}
+
+
+	//振り向いてる時にspaceを押すとカメラが近づく処理
+	if (isCaught_) {
+
+		catchTimer_ += 1.0f / 60.0f;
+
+		// カメラ前進
+		camera_.translation_.z += 0.5f;
+
+		//ここで判定！！
+		if (camera_.translation_.z > 20.0f) {
+
+			player_->SetDead();  // ←ここに移動
+		}
+		player_->SetStopLook(true);
+	}
+
+
+	//イベント発生
+	if (!isEventActive_ && eventCount > 0 && gameTimer_ >= nextEventTime_ && player_->IsBackingWards()) {
+
+		isEventActive_ = true;
+		eventTimer_ = 420; // 7秒
+		eventCount -= 1;
+
+		// 次のイベント時間をランダムで設定
+		nextEventTime_ = gameTime + (rand() % 3600 + 360);
+		//nextEventTime_ = rand() % 420 + 180; // 180〜600フレーム
+	}
+
+
+	if (isEventActive_) {
+		eventTimer_--;
+
+		player_->SetStopLook(true);
+
+		if (eventTimer_ <= 0) {
+			isEventActive_ = false;
+			player_->SetStopLook(false);
+		}
+
+		// ランダムで色変更
+		flashColor_.x = (float)(rand() % 100) / 100.0f; // R
+		flashColor_.y = (float)(rand() % 100) / 100.0f; // G
+		flashColor_.z = (float)(rand() % 100) / 100.0f; // B
+		flashColor_.w = 0.5f; // 透明度（0〜1）
+
+		flashSprite_->SetColor(flashColor_);
+	}
+	else {
+		// 通常時は透明
+		flashColor_ = { 1,1,1,0 };
+		flashSprite_->SetColor(flashColor_);
+	}
+
+	//CController_->Updata();
 }
 
 void GameScene::Draw()
@@ -184,6 +273,8 @@ void GameScene::Draw()
 
 	Sprite::PreDraw();
 	sprite_->Draw();
+	// フラッシュ描画
+	flashSprite_->Draw();
 	Sprite::PostDraw();
 
 	
