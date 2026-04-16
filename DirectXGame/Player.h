@@ -1,6 +1,8 @@
 #pragma once
 #include "KamataEngine.h"
 #include "UpData.h"
+#include <cmath>
+#include <ctime>
 
 class Player {
 public:
@@ -28,6 +30,23 @@ public:
 	// 02_06スライド28枚目で追加
 	const KamataEngine::Vector3& GetVelocity() const { return velocity_; }
 
+	//振り向いたことを察知するフラグ
+	bool IsLooked() const { return isLooked_; }
+
+	bool IsLooking() const;
+
+	bool IsBackWards() const { return isBack_; }
+
+	bool IsBackingWards() const;
+
+	//死亡フラグ
+	bool IsDead() const { return isDead_; }
+
+	void SetDead() { isDead_ = true; }
+
+	void SetStopLook(bool flag) { isStopLook_ = flag; }
+
+	float GetRotationY() const { return worldTransform_.rotation_.y; }
 private:
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
@@ -56,9 +75,19 @@ private:
 	static inline const float kLookStartTime = 0.2f;//向きを変えるまでの時間
 	static inline const float kLookingTime = 0.5f;//見続ける時間
 	static inline const float kLookEndTime = 0.3f;//元に戻るまでの時間
-	static inline const float kIdleCooldownMin = 1.5f;
-	static inline const float kIdleCooldownMax = 3.5f;
+	static inline const float kIdleCooldownMin = 0.5f;
+	static inline const float kIdleCooldownMax = 10.0f;
 	static inline const float kLookCycle = 2.0f;    // 1周期あたりの時間（秒）
 	static inline const float kMaxLookAngle = 0.4f; // 最大角度（ラジアン）※約23度
 	float idleCooldown_ = 0.0f;//次のチラ見までの待機時間
+
+	//bossが振り向いたか察知するフラグ
+	bool isLooked_ = false;
+
+	// デスフラグ
+	bool isDead_ = false;
+
+	bool isStopLook_ = false;
+
+	bool isBack_ = false;
 };
