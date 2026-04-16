@@ -12,6 +12,8 @@ GameScene::~GameScene() {
 	delete modelPlayerHandLeft_;
 	delete sprite_;
 	player_ = nullptr;
+	delete sumaho_;
+	sumaho_ = nullptr;
 	//delete CController_;
 }
 
@@ -115,6 +117,11 @@ void GameScene::Initialize()
 	Vector3 TablePos = { 0.0f,-2.1f,-3.0f };
 
 	table_->Initialize(modelTable_, &camera_, TablePos);
+	//スマホ
+	sumahoModel_ = Model::CreateFromOBJ("sumaho", true); // フォルダ名を指定
+	sumaho_ = new Sumaho();
+	sumaho_->Initialize(sumahoModel_);
+	modelCommon_ = ModelCommon::GetInstance();
 }
 
 Vector3 GameScene::GetWorldPosition() const {
@@ -268,7 +275,33 @@ void GameScene::UpDate()
 		flashSprite_->SetColor(flashColor_);
 	}
 
-	//CController_->Updata();
+	Input* input = Input::GetInstance();
+
+	// 目標の座標と回転
+	Vector3 targetPos;
+	Vector3 targetRot;
+
+	if (input->PushKey(DIK_E)) {
+		// 【スペース押し：手元に立てる】
+		targetPos = { 10.0f, 0.0f, -5.0f };
+		targetRot = { 0.2f, 0.0f, 0.0f }; // 少しだけ手前に傾ける
+	}
+	else {
+		// 【通常時：机に寝かせる】
+		targetPos = { 20.0f, -12.0f, 15.0f };
+		targetRot = { 1.4f, -0.0f, 0.0f }; // Xを大きく(1.4f〜1.5f)するとパタンと寝ます
+	}
+
+	// 線形補間でヌルっと動かす（0.1fの部分を大きくすると速くなります）
+	sumaho_->worldTransform_.translation_.x += (targetPos.x - sumaho_->worldTransform_.translation_.x) * 0.5f;
+	sumaho_->worldTransform_.translation_.y += (targetPos.y - sumaho_->worldTransform_.translation_.y) * 0.5f;
+	sumaho_->worldTransform_.translation_.z += (targetPos.z - sumaho_->worldTransform_.translation_.z) * 0.5f;
+
+	sumaho_->worldTransform_.rotation_.x += (targetRot.x - sumaho_->worldTransform_.rotation_.x) * 0.1f;
+	sumaho_->worldTransform_.rotation_.y += (targetRot.y - sumaho_->worldTransform_.rotation_.y) * 0.1f;
+
+	sumaho_->Update();
+	camera_.UpdateMatrix();
 }
 
 void GameScene::Draw()
@@ -279,7 +312,7 @@ void GameScene::Draw()
 	playerHandLeft->Draw();
 	pc_->Draw();
 	table_->Draw();
-
+	sumaho_->Draw(camera_);
 	Model::PostDraw();
 
 	Sprite::PreDraw();
@@ -290,4 +323,3 @@ void GameScene::Draw()
 
 	
 
-}
