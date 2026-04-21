@@ -115,12 +115,14 @@ void GameScene::Initialize()
 	modelTable_ = Model::CreateFromOBJ("table", true);
 
 	Vector3 TablePos = { 0.0f,-2.1f,-3.0f };
-
 	table_->Initialize(modelTable_, &camera_, TablePos);
+
+
 	//スマホ
-	sumahoModel_ = Model::CreateFromOBJ("sumaho", true); // フォルダ名を指定
 	sumaho_ = new Sumaho();
-	sumaho_->Initialize(sumahoModel_);
+	sumahoModel_ = Model::CreateFromOBJ("sumaho", true); // フォルダ名を指定
+	Vector3 phonePos = { 0.0f,-1.0f,-3.0f };
+	sumaho_->Initialize(sumahoModel_, &camera_,phonePos);
 	modelCommon_ = ModelCommon::GetInstance();
 }
 
@@ -275,7 +277,7 @@ void GameScene::UpDate()
 		flashSprite_->SetColor(flashColor_);
 	}
 
-	Input* input = Input::GetInstance();
+	
 
 	// 目標の座標と回転
 	Vector3 targetPos;
@@ -283,12 +285,12 @@ void GameScene::UpDate()
 
 	if (input->PushKey(DIK_E)) {
 		// 【スペース押し：手元に立てる】
-		targetPos = { 10.0f, 0.0f, -5.0f };
-		targetRot = { 0.2f, 0.0f, 0.0f }; // 少しだけ手前に傾ける
+		targetPos = { 1.0f, 1.5f, -8.0f };
+		targetRot = { 0.2f, 0.0f, 0.0f };// 少しだけ手前に傾ける
 	}
 	else {
 		// 【通常時：机に寝かせる】
-		targetPos = { 20.0f, -12.0f, 15.0f };
+		targetPos = { 2.0f, 0.5f, -4.0f };
 		targetRot = { 1.4f, -0.0f, 0.0f }; // Xを大きく(1.4f〜1.5f)するとパタンと寝ます
 	}
 
@@ -312,7 +314,7 @@ void GameScene::Draw()
 	playerHandLeft->Draw();
 	pc_->Draw();
 	table_->Draw();
-	sumaho_->Draw(camera_);
+	sumaho_->Draw();
 	Model::PostDraw();
 
 	Sprite::PreDraw();
@@ -320,6 +322,7 @@ void GameScene::Draw()
 	// フラッシュ描画
 	flashSprite_->Draw();
 	Sprite::PostDraw();
+}
 
 	
 

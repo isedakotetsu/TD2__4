@@ -3,18 +3,16 @@
 
 using namespace KamataEngine;
 
-void Sumaho::Initialize(Model* model) {
+void Sumaho::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3& position) 
+{
     assert(model);
     model_ = model;
 
     worldTransform_.Initialize();
 
     // 1. スケール（少し大きくする）
-    worldTransform_.scale_ = { 2.0f, 2.0f, 2.0f };
-
-    // 2. 位置（画面の右下あたりに配置）
-    worldTransform_.translation_ = { 20.0f, -12.0f, 15.0f };
-
+    worldTransform_.scale_ = { 0.5f, 0.5f, 0.5f };
+    worldTransform_.translation_ = position;
 	// 3. 回転（少し傾ける）
     worldTransform_.rotation_ = { 1.4f, -0.0f, 0.0f };
 
@@ -24,6 +22,8 @@ void Sumaho::Initialize(Model* model) {
         worldTransform_.translation_
     );
     worldTransform_.TransferMatrix();
+    camera_ = camera;
+
 }
 
 void Sumaho::Update() {
@@ -36,8 +36,10 @@ void Sumaho::Update() {
     worldTransform_.TransferMatrix();
 }
 
-void Sumaho::Draw(const Camera& camera) {
-    if (model_) {
-        model_->Draw(worldTransform_, camera);
+void Sumaho::Draw()
+{
+    if (model_) 
+    {
+        model_->Draw(worldTransform_, *camera_);
     }
 }
