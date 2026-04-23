@@ -15,6 +15,7 @@ GameScene::~GameScene() {
 	delete sumaho_;
 	sumaho_ = nullptr;
 	//delete CController_;
+	delete timeDisplay_;
 }
 
 void GameScene::Initialize()
@@ -50,6 +51,10 @@ void GameScene::Initialize()
 	Vector3 playerHandLeftPos = { -2.0f,0.5f,-4.3f };
 
 	playerHandLeft->Initialize(modelPlayerHandLeft_, &camera_, playerHandLeftPos);
+
+	//時間表示
+	timeDisplay_ = new Time();
+	timeDisplay_->Initialize();
 
 	//PCモデル
 	pc_ = new PC();
@@ -158,6 +163,9 @@ void GameScene::UpDate()
 	playerHandLeft->Update();
 	pc_->Update();
 	table_->Update();
+	// Timeクラスに現在の残り時間を渡して計算させる
+	timeDisplay_->UpDate(gameTime);
+
 
 	//画面切り替え
 	if (KamataEngine::Input::GetInstance()->TriggerKey(DIK_SPACE))
@@ -319,6 +327,12 @@ void GameScene::Draw()
 
 	Sprite::PreDraw();
 	sprite_->Draw();
+
+	// 時間表示
+	if (timeDisplay_) {
+		timeDisplay_->Draw();
+	}
+
 	// フラッシュ描画
 	flashSprite_->Draw();
 	Sprite::PostDraw();

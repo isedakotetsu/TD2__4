@@ -175,6 +175,7 @@
     <ClCompile Include="playerHandLeft.cpp" />
     <ClCompile Include="Table.cpp" />
     <ClCompile Include="Sumaho.cpp" />
+    <ClCompile Include="Time.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="UpData.cpp" />
   </ItemGroup>
@@ -287,6 +288,7 @@
     <ClInclude Include="playerHandLeft.h" />
     <ClInclude Include="Table.h" />
     <ClInclude Include="Sumaho.h" />
+    <ClInclude Include="Time.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="UpData.h" />
   </ItemGroup>

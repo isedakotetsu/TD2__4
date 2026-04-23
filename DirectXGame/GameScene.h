@@ -6,7 +6,7 @@
 #include "PC.h"
 #include <input/Input.h>
 #include "Table.h"
-
+#include "Time.h"
 
 
 #include "CameraController.h"
@@ -139,4 +139,6 @@ private:
 	Vector4 flashColor_ = { 1,1,1,0 }; 
 
 	int gameTimer_ = 0;
+
+	Time* timeDisplay_ = nullptr;
 };
