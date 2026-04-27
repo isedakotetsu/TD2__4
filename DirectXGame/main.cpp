@@ -4,6 +4,9 @@
 #include "TitleScene.h"
 #include "GameClear.h"
 #include "GameOver.h"
+#include "imgui.h"
+#include "imgui_impl_dx12.h"
+#include "imgui_impl_win32.h"
 
 using namespace KamataEngine;
 
@@ -140,6 +143,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		if (Update()) {
 			break;
 		}
+		ImGui_ImplDX12_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+
 
 		// シーンごとにUpdate
 		switch (scene) {
@@ -147,7 +154,18 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 			titleScene->UpDate();
 			break;
 		case Scene::kGame:
+			// ImGuiの開始処理
+
+			// 開発用UIの処理。実際に開発用のUIを出す場合はここをゲーム固有の処理に置き換える
+			ImGui::ShowDemoWindow();
+			ImGui::Begin("Debug Info");
+
+			ImGui::Text("rotationY: %.2f", gameScene->GetPlayer()->GetRotationY());
+			ImGui::Text("translation: %.2f", gameScene->GetPlayer()->GetTranslationX());
+			ImGui::Text("Returning: %s", gameScene->GetPlayer()->GetIsReturning() ? "true" : "false");
+			ImGui::End();
 			gameScene->UpDate();
+
 			break;
 		case Scene::kGameOver:
 			gameOverScene->UpDate();
@@ -156,13 +174,18 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 			gameClearScene->UpDate();
 			break;
 		}
-                    
+
+
 		ChangeScene();
 
 		// 描画開始
 		dxCommon->PreDraw();
 
 		DrawScene();
+
+		ImGui::Render();
+		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), dxCommon->GetCommandList());
+
 
 		// 描画終了
 		dxCommon->PostDraw();

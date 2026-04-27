@@ -101,4 +101,6 @@ private:
 	Vector4 flashColor_ = { 1,1,1,0 }; 
 
 	int gameTimer_ = 0;
+
+	float rotY;
 };

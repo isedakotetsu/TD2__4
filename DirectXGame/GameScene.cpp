@@ -59,6 +59,8 @@ void GameScene::Initialize()
 	flashSprite_ = Sprite::Create(0, { 0, 0 });
 
 	flashSprite_->SetSize({ 1280, 720 });
+
+	rotY = player_->GetRotationY();
 }
 
 Vector3 GameScene::GetWorldPosition() const {
@@ -85,12 +87,14 @@ AABB GameScene::GetAABB() {
 void GameScene::UpDate()
 {
 
-	gameTime--;
+	//gameTime--;
 
 	gameTimer_++;
 
 	player_->UpDate();
 	camera_.UpdateMatrix();
+
+	rotY = player_->GetRotationY();
 
 	Input* input = Input::GetInstance();
 	// Spaceキー押した瞬間
@@ -99,16 +103,27 @@ void GameScene::UpDate()
 		score_ += scoreCount_;
 
 		// プレイヤーが振り向いてたら
-		if (player_->IsLooking()) {
+		//if (player_->IsLooking()) {
 
-			//player_->SetDead();
+		//	//player_->SetDead();
+		//	isCaught_ = true;
+		//	catchTimer_ = 0.0f; // ←初期化
+		//	player_->SetStopLook(true);
+		//	score_ -= scoreCount_;
+		//}
+
+		//顔が完全に横向きになってる角度でspaceキーを押すとアウト
+		if (rotY > 1.98f) {
+
 			isCaught_ = true;
-			catchTimer_ = 0.0f; // ←初期化
+			catchTimer_ = 0.0f;
 			player_->SetStopLook(true);
 			score_ -= scoreCount_;
 		}
+
 	}
 
+	
 
 	//振り向いてる時にspaceを押すとカメラが近づく処理
 	if (isCaught_) {
@@ -123,31 +138,33 @@ void GameScene::UpDate()
 
 			player_->SetDead();  // ←ここに移動
 		}
-		player_->SetStopLook(true);
 	}
 
 
 	//イベント発生
-	if (!isEventActive_ && eventCount > 0 && gameTimer_ >= nextEventTime_ && player_->IsBackingWards()) {
+	if (!isEventActive_ &&
+		eventCount > 0 && 
+		gameTimer_ >= nextEventTime_&&
+		player_->IsBackingWards()) {
 
 		isEventActive_ = true;
 		eventTimer_ = 420; // 7秒
 		eventCount -= 1;
-
+		player_->StartFever();
 		// 次のイベント時間をランダムで設定
-		nextEventTime_ = gameTime + (rand() % 3600 + 360);
+		nextEventTime_ = gameTimer_ + (rand() % 3600 + 360);
 		//nextEventTime_ = rand() % 420 + 180; // 180〜600フレーム
 	}
 
-
+	//イベント中の処理
 	if (isEventActive_) {
 		eventTimer_--;
 
-		player_->SetStopLook(true);
+		//player_->IsBackingWards();
 
 		if (eventTimer_ <= 0) {
 			isEventActive_ = false;
-			player_->SetStopLook(false);
+			
 		}
 
 		// ランダムで色変更
@@ -157,12 +174,16 @@ void GameScene::UpDate()
 		flashColor_.w = 0.5f; // 透明度（0〜1）
 
 		flashSprite_->SetColor(flashColor_);
-	}
-	else {
+	}else {
 		// 通常時は透明
 		flashColor_ = { 1,1,1,0 };
 		flashSprite_->SetColor(flashColor_);
 	}
+
+	//playerが座標を獲得する関数
+	Vector3 pos = player_->GetWorldPosition();
+
+	
 
 	//CController_->Updata();
 }
