@@ -46,7 +46,16 @@ public:
 
 	void SetStopLook(bool flag) { isStopLook_ = flag; }
 
-	float GetRotationY() const { return worldTransform_.rotation_.y; }
+	float GetRotationY() const;
+	float GetTranslationX() const;
+
+	bool GetIsReturning() const;
+
+	void StartFever();
+
+	bool IsFever() const { return isFever_; }
+
+	bool CanLook() const;
 private:
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
@@ -90,4 +99,10 @@ private:
 	bool isStopLook_ = false;
 
 	bool isBack_ = false;
+
+	bool isFever_ = false;
+	bool isCaught_ = false;//みつかった状態
+	float feverTimer_ = 0.0f;
+	KamataEngine::Vector3 startPos_;
+	bool isReturning_ = false;
 };
