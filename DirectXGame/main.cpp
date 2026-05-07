@@ -40,7 +40,7 @@ void ChangeScene() {
 	case Scene::kGame:
 		// 02_12 30枚目
 		if (gameScene->IsFinished()) {
-			Player* player_ = gameScene->GetPlayer();
+			//Player* player_ = gameScene->GetPlayer();
 
 			// ポーズメニューからリトライ or タイトル選択
 			if (gameScene->IsPauseActive()) {
@@ -61,7 +61,7 @@ void ChangeScene() {
 			}
 			// 死亡 or ゴール時の遷移
 			else {
-				if (player_->IsDead()) {
+				if (gameScene->IsDead()) {
 					scene = Scene::kGameOver;
 					delete gameScene;
 					gameScene = nullptr;

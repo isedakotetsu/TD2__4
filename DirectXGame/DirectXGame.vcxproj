@@ -173,6 +173,7 @@
     <ClCompile Include="PC.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="playerHandLeft.cpp" />
+    <ClCompile Include="Score.cpp" />
     <ClCompile Include="Table.cpp" />
     <ClCompile Include="Sumaho.cpp" />
     <ClCompile Include="Time.cpp" />
@@ -286,6 +287,7 @@
     <ClInclude Include="PC.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="playerHandLeft.h" />
+    <ClInclude Include="Score.h" />
     <ClInclude Include="Table.h" />
     <ClInclude Include="Sumaho.h" />
     <ClInclude Include="Time.h" />

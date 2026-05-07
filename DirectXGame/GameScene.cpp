@@ -16,10 +16,13 @@ GameScene::~GameScene() {
 	sumaho_ = nullptr;
 	//delete CController_;
 	delete timeDisplay_;
+	delete scoreDisplay_;
 }
 
 void GameScene::Initialize()
 {
+
+	phase_ = Phase::kPlay;
 
 	model_ = Model::Create();
 
@@ -55,6 +58,10 @@ void GameScene::Initialize()
 	//時間表示
 	timeDisplay_ = new Time();
 	timeDisplay_->Initialize();
+
+	//スコア表示
+	scoreDisplay_ = new Score(); 
+	scoreDisplay_->Initialize();
 
 	//PCモデル
 	pc_ = new PC();
@@ -103,7 +110,7 @@ void GameScene::Initialize()
 	upData = new UpData();
 	//upData->WorldTransformUpData(player_->GetWorldTransform());
 
-	gameTime = 10800; //ゲームプレイ時間
+	gameTime = 1200  ; //ゲームプレイ時間
 	gameTimer_ = 0;
 	isEventActive_ = false;
 	eventTimer_ = 0;
@@ -155,7 +162,15 @@ AABB GameScene::GetAABB() {
 void GameScene::UpDate()
 {
 
-	gameTime--;
+	if(gameTime>0) 
+	{
+		gameTime--;
+	}
+	else
+	{
+		gameTime = 0;
+		phase_ = Phase::kDeath;
+	}
 
 	gameTimer_++;
 
@@ -166,6 +181,29 @@ void GameScene::UpDate()
 	// Timeクラスに現在の残り時間を渡して計算させる
 	timeDisplay_->UpDate(gameTime);
 
+	scoreDisplay_->UpDate(score_);
+
+	Input* input = Input::GetInstance();
+
+	if (!isEventActive_) {
+		if (!isGifA_)
+		{
+			// 何も押していなくても、ゲーム画面を出しているだけで毎フレーム1点入る
+			score_ += 1;
+
+		}
+		if (input->PushKey(DIK_E)) {
+
+			score_ += 2;
+		}
+	}
+	else {
+		// もし「先生が向いているのにボタンを押していたら」のペナルティを書くならここ
+		if (input->PushKey(DIK_SPACE) || input->PushKey(DIK_E)) {
+			// 捕まるフラグを立てるなどの処理
+			isCaught_ = true;
+		}
+	}
 
 	//画面切り替え
 	if (KamataEngine::Input::GetInstance()->TriggerKey(DIK_SPACE))
@@ -213,11 +251,11 @@ void GameScene::UpDate()
 	}
 	camera_.UpdateMatrix();
 
-	Input* input = Input::GetInstance();
+	
 	// Spaceキー押した瞬間
 	if (!isEventActive_ && input->PushKey(DIK_SPACE)) {
 
-		score_ += scoreCount_;
+		//score_ += scoreCount_;
 
 		// プレイヤーが振り向いてたら
 		if (player_->IsLooking()) {
@@ -242,7 +280,7 @@ void GameScene::UpDate()
 		//ここで判定！！
 		if (camera_.translation_.z > 20.0f) {
 
-			player_->SetDead();  // ←ここに移動
+			phase_ = Phase::kDeath; // ←ここに移動
 		}
 		player_->SetStopLook(true);
 	}
@@ -332,6 +370,9 @@ void GameScene::Draw()
 	if (timeDisplay_) {
 		timeDisplay_->Draw();
 	}
+
+	//スコア表示
+	scoreDisplay_->Draw();
 
 	// フラッシュ描画
 	flashSprite_->Draw();
