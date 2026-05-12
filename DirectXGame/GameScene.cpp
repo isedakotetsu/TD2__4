@@ -330,6 +330,16 @@ void GameScene::UpDate()
 
 void GameScene::Draw()
 {
+
+	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
+
+	Sprite::PreDraw();
+	// フラッシュ描画
+	flashSprite_->Draw();
+	Sprite::PostDraw();
+
+	dxCommon->ClearDepthBuffer();
+
 	Model::PreDraw();
 
 	player_->Draw();
@@ -341,9 +351,9 @@ void GameScene::Draw()
 
 	Sprite::PreDraw();
 	sprite_->Draw();
-	// フラッシュ描画
-	flashSprite_->Draw();
 	Sprite::PostDraw();
+
+
 }
 
 	
