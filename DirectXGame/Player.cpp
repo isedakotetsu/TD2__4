@@ -37,7 +37,7 @@ Vector3 Player::GetWorldPosition() const {
 }
 
 bool Player::IsLooking() const {
-	return lookState_ == LookState::kLooking ||lookState_ == LookState::kLookEnd;
+	return lookState_ == LookState::kLookEnd;
 }
 
 bool Player::IsBackingWards()const {
@@ -93,11 +93,6 @@ void Player::UpDate() {
 
 			float t = lookTimer_ / kLookEndTime;
 			t = std::clamp(t, 0.0f, 1.0f);
-
-			// 正面 → 振り向く
-			/*worldTransform_.rotation_.y =
-				0.95f * std::numbers::pi_v<float> -
-				kLookAngle * t;*/
 
 			float startAngle = 0.95f * std::numbers::pi_v<float>; // 振り向き最大角
 			float endAngle = 0.0f; // 真後ろ

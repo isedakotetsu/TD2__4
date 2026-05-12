@@ -108,7 +108,7 @@ void GameScene::Initialize()
 	}
 
 	upData = new UpData();
-	//upData->WorldTransformUpData(player_->GetWorldTransform());
+	
 
 	gameTime = 1200  ; //ゲームプレイ時間
 	gameTimer_ = 0;
@@ -206,6 +206,7 @@ void GameScene::UpDate()
 	}
 
 	//画面切り替え
+	//spaceキーを押したらゲームGIFと勉強GIFを切り替える
 	if (KamataEngine::Input::GetInstance()->TriggerKey(DIK_SPACE))
 	{
 		isGifA_ = !isGifA_;
@@ -222,6 +223,7 @@ void GameScene::UpDate()
 
 			if (!framesB_.empty()) {
 				sprite_->SetTextureHandle(framesB_[0]);
+
 			}
 		}
 
@@ -251,39 +253,36 @@ void GameScene::UpDate()
 	}
 	camera_.UpdateMatrix();
 
-	
-	// Spaceキー押した瞬間
-	if (!isEventActive_ && input->PushKey(DIK_SPACE)) {
+	// GIFがB中に振り向いたら1回だけ減点
+	if (!isGifA_ && player_->IsLooking() && !isCaught_)
+	{
+		//isCaught_ = true;
+		catchTimer_ = 0.0f;
+		//player_->SetStopLook(true);
 
-		//score_ += scoreCount_;
+		score_ -= scoreCount_;
 
-		// プレイヤーが振り向いてたら
-		if (player_->IsLooking()) {
-
-			//player_->SetDead();
-			isCaught_ = true;
-			catchTimer_ = 0.0f; // ←初期化
-			player_->SetStopLook(true);
-			score_ -= scoreCount_;
+		if (score_ < 0) {
+			score_ = 0;
 		}
 	}
 
 
-	//振り向いてる時にspaceを押すとカメラが近づく処理
-	if (isCaught_) {
+	////振り向いてる時にspaceを押すとカメラが近づく処理
+	//if (isCaught_) {
 
-		catchTimer_ += 1.0f / 60.0f;
+	//	catchTimer_ += 1.0f / 60.0f;
 
-		// カメラ前進
-		camera_.translation_.z += 0.5f;
+	//	// カメラ前進
+	//	camera_.translation_.z += 0.5f;
 
-		//ここで判定！！
-		if (camera_.translation_.z > 20.0f) {
+	//	//ここで判定！！
+	//	if (camera_.translation_.z > 20.0f) {
 
-			phase_ = Phase::kDeath; // ←ここに移動
-		}
-		player_->SetStopLook(true);
-	}
+	//		phase_ = Phase::kDeath; // ←ここに移動
+	//	}
+	//	player_->SetStopLook(true);
+	//}
 
 
 	//イベント発生
