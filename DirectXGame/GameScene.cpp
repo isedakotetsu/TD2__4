@@ -14,11 +14,14 @@ GameScene::~GameScene() {
 	player_ = nullptr;
 	delete sumaho_;
 	sumaho_ = nullptr;
-	//delete CController_;
+	delete timeDisplay_;
+	delete scoreDisplay_;
 }
 
 void GameScene::Initialize()
 {
+
+	phase_ = Phase::kPlay;
 
 	model_ = Model::Create();
 
@@ -50,6 +53,14 @@ void GameScene::Initialize()
 	Vector3 playerHandLeftPos = { -2.0f,0.5f,-4.3f };
 
 	playerHandLeft->Initialize(modelPlayerHandLeft_, &camera_, playerHandLeftPos);
+
+	//時間表示
+	timeDisplay_ = new Time();
+	timeDisplay_->Initialize();
+
+	//スコア表示
+	scoreDisplay_ = new Score(); 
+	scoreDisplay_->Initialize();
 
 	//PCモデル
 	pc_ = new PC();
@@ -96,9 +107,9 @@ void GameScene::Initialize()
 	}
 
 	upData = new UpData();
-	//upData->WorldTransformUpData(player_->GetWorldTransform());
+	
 
-	gameTime = 10800; //ゲームプレイ時間
+	gameTime = 1200  ; //ゲームプレイ時間
 	gameTimer_ = 0;
 	isEventActive_ = false;
 	eventTimer_ = 0;
@@ -124,8 +135,6 @@ void GameScene::Initialize()
 	Vector3 phonePos = { 0.0f,-1.0f,-3.0f };
 	sumaho_->Initialize(sumahoModel_, &camera_,phonePos);
 	modelCommon_ = ModelCommon::GetInstance();
-
-	rotY = player_->GetRotationY();
 }
 
 Vector3 GameScene::GetWorldPosition() const {
@@ -152,7 +161,15 @@ AABB GameScene::GetAABB() {
 void GameScene::UpDate()
 {
 
-	//gameTime--;
+	if(gameTime>0) 
+	{
+		gameTime--;
+	}
+	else
+	{
+		gameTime = 0;
+		phase_ = Phase::kDeath;
+	}
 
 	gameTimer_++;
 
@@ -160,8 +177,35 @@ void GameScene::UpDate()
 	playerHandLeft->Update();
 	pc_->Update();
 	table_->Update();
+	// Timeクラスに現在の残り時間を渡して計算させる
+	timeDisplay_->UpDate(gameTime);
+
+	scoreDisplay_->UpDate(score_);
+
+	Input* input = Input::GetInstance();
+
+	if (!isEventActive_) {
+		if (!isGifA_)
+		{
+			// 何も押していなくても、ゲーム画面を出しているだけで毎フレーム1点入る
+			score_ += 1;
+
+		}
+		if (input->PushKey(DIK_E)) {
+
+			score_ += 2;
+		}
+	}
+	else {
+		// もし「先生が向いているのにボタンを押していたら」のペナルティを書くならここ
+		if (input->PushKey(DIK_SPACE) || input->PushKey(DIK_E)) {
+			// 捕まるフラグを立てるなどの処理
+			isCaught_ = true;
+		}
+	}
 
 	//画面切り替え
+	//spaceキーを押したらゲームGIFと勉強GIFを切り替える
 	if (KamataEngine::Input::GetInstance()->TriggerKey(DIK_SPACE))
 	{
 		isGifA_ = !isGifA_;
@@ -178,6 +222,7 @@ void GameScene::UpDate()
 
 			if (!framesB_.empty()) {
 				sprite_->SetTextureHandle(framesB_[0]);
+
 			}
 		}
 
@@ -207,51 +252,33 @@ void GameScene::UpDate()
 	}
 	camera_.UpdateMatrix();
 
-	rotY = player_->GetRotationY();
+	// GIFがB中に振り向いたら1回だけ減点
+	if (!isGifA_ && player_->IsLooking() && !isCaught_)
+	{
+		catchTimer_ = 0.0f;
 
-	Input* input = Input::GetInstance();
-	// Spaceキー押した瞬間
-	if (!isEventActive_ && input->PushKey(DIK_SPACE)) {
+		score_ -= scoreCount_;
 
-		score_ += scoreCount_;
-
-		// プレイヤーが振り向いてたら
-		//if (player_->IsLooking()) {
-
-		//	//player_->SetDead();
-		//	isCaught_ = true;
-		//	catchTimer_ = 0.0f; // ←初期化
-		//	player_->SetStopLook(true);
-		//	score_ -= scoreCount_;
-		//}
-
-		//顔が完全に横向きになってる角度でspaceキーを押すとアウト
-		if (rotY > 1.98f) {
-
-			isCaught_ = true;
-			catchTimer_ = 0.0f;
-			player_->SetStopLook(true);
-			score_ -= scoreCount_;
+		if (score_ < 0) {
+			score_ = 0;
 		}
 
 	}
 
-	
+	// 振り向いてる時にスマホを見ていたら減点
+	if (player_->IsLooking() && input->PushKey(DIK_E) && !isCaught_)
+	{
+		catchTimer_ = 0.0f;
 
-	//振り向いてる時にspaceを押すとカメラが近づく処理
-	if (isCaught_) {
+		score_ -= scoreCount_;
 
-		catchTimer_ += 1.0f / 60.0f;
-
-		// カメラ前進
-		camera_.translation_.z += 0.5f;
-
-		//ここで判定！！
-		if (camera_.translation_.z > 20.0f) {
-
-			player_->SetDead();  // ←ここに移動
+		if (score_ < 0) {
+			score_ = 0;
 		}
+
+		//isCaught_ = true;
 	}
+
 
 
 	//イベント発生
@@ -351,6 +378,15 @@ void GameScene::Draw()
 
 	Sprite::PreDraw();
 	sprite_->Draw();
+
+	// 時間表示
+	if (timeDisplay_) {
+		timeDisplay_->Draw();
+	}
+
+	//スコア表示
+	scoreDisplay_->Draw();
+
 	Sprite::PostDraw();
 
 

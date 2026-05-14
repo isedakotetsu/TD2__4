@@ -6,8 +6,8 @@
 #include "PC.h"
 #include <input/Input.h>
 #include "Table.h"
-
-
+#include "Time.h"
+#include "Score.h"
 
 #include "CameraController.h"
 #include "Sumaho.h"
@@ -33,8 +33,10 @@ public:
 	//クリアしたことを感知する関数
 	bool IsClear() const { return phase_ == Phase::kClear; }
 
-	bool IsFinished() const { return player_->IsDead(); }
+	bool IsFinished() const { return phase_ == Phase::kDeath || phase_ == Phase::kClear; }
 
+	// 追加: 死亡したかどうかを判定する関数（main.cppで使用）
+	bool IsDead() const { return phase_ == Phase::kDeath; }
 
 
 	//ワールド座標を取得
@@ -129,7 +131,7 @@ private:
 
 	/*========EVENT==========*/
 
-	int gameTime = 10800; //ゲームプレイ時間
+	int gameTime = 3600; //ゲームプレイ時間
 	int nextEventTime_ = 0;     // 次に発生する時間
 	int eventCount = 3;  //イベント回数
 	bool isEventActive_ = false; //イベントが発生するフラグ
@@ -139,6 +141,10 @@ private:
 	Vector4 flashColor_ = { 1,1,1,0 }; 
 
 	int gameTimer_ = 0;
+
+	Time* timeDisplay_ = nullptr;
+
+	Score* scoreDisplay_ = nullptr;
 
 	float rotY;
 };
