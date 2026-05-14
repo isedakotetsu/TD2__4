@@ -256,9 +256,7 @@ void GameScene::UpDate()
 	// GIFがB中に振り向いたら1回だけ減点
 	if (!isGifA_ && player_->IsLooking() && !isCaught_)
 	{
-		//isCaught_ = true;
 		catchTimer_ = 0.0f;
-		//player_->SetStopLook(true);
 
 		score_ -= scoreCount_;
 
@@ -267,6 +265,19 @@ void GameScene::UpDate()
 		}
 	}
 
+	// 振り向いてる時にスマホを見ていたら減点
+	if (player_->IsLooking() && input->PushKey(DIK_E) && !isCaught_)
+	{
+		catchTimer_ = 0.0f;
+
+		score_ -= scoreCount_;
+
+		if (score_ < 0) {
+			score_ = 0;
+		}
+
+		//isCaught_ = true;
+	}
 
 	////振り向いてる時にspaceを押すとカメラが近づく処理
 	//if (isCaught_) {
