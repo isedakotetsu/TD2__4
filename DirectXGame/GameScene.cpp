@@ -279,21 +279,6 @@ void GameScene::UpDate()
 		//isCaught_ = true;
 	}
 
-	////振り向いてる時にspaceを押すとカメラが近づく処理
-	//if (isCaught_) {
-
-	//	catchTimer_ += 1.0f / 60.0f;
-
-	//	// カメラ前進
-	//	camera_.translation_.z += 0.5f;
-
-	//	//ここで判定！！
-	//	if (camera_.translation_.z > 20.0f) {
-
-	//		phase_ = Phase::kDeath; // ←ここに移動
-	//	}
-	//	player_->SetStopLook(true);
-	//}
 
 
 	//イベント発生
