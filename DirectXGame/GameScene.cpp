@@ -109,7 +109,7 @@ void GameScene::Initialize()
 	upData = new UpData();
 	
 
-	gameTime = 1200  ; //ゲームプレイ時間
+	gameTime = 7200  ; //ゲームプレイ時間
 	gameTimer_ = 0;
 	isEventActive_ = false;
 	eventTimer_ = 0;
@@ -158,6 +158,8 @@ AABB GameScene::GetAABB() {
 	return aabb;
 }
 
+
+
 void GameScene::UpDate()
 {
 
@@ -183,24 +185,39 @@ void GameScene::UpDate()
 	scoreDisplay_->UpDate(score_);
 
 	Input* input = Input::GetInstance();
+// =====================
+// スコア加算
+// =====================
 
-	if (!isEventActive_) {
-		if (!isGifA_)
-		{
-			// 何も押していなくても、ゲーム画面を出しているだけで毎フレーム1点入る
-			score_ += 1;
+// ゲーム画面中なら毎フレーム加点
+	if (!isGifA_)
+	{
+		score_ += 1;
+	}
 
+	// スマホ操作中なら加点
+	if (input->PushKey(DIK_E))
+	{
+		// FEVER中は倍率アップ
+		if (isEventActive_) {
+			score_ += 6;
 		}
-		if (input->PushKey(DIK_E)) {
-
+		else {
 			score_ += 2;
 		}
 	}
-	else {
-		// もし「先生が向いているのにボタンを押していたら」のペナルティを書くならここ
+
+	// =====================
+	// ペナルティ処理
+	// =====================
+
+	if (isEventActive_) {
+
+		// FEVER中に禁止操作した場合
 		if (input->PushKey(DIK_SPACE) || input->PushKey(DIK_E)) {
-			// 捕まるフラグを立てるなどの処理
-			isCaught_ = true;
+
+			// 必要ならペナルティ
+			// isCaught_ = true;
 		}
 	}
 
@@ -253,7 +270,7 @@ void GameScene::UpDate()
 	camera_.UpdateMatrix();
 
 	// GIFがB中に振り向いたら1回だけ減点
-	if (!isGifA_ && player_->IsLooking() && !isCaught_)
+	if (!isGifA_ && player_->IsInScreen() && player_->IsLooking() && !isCaught_)
 	{
 		catchTimer_ = 0.0f;
 
@@ -266,7 +283,7 @@ void GameScene::UpDate()
 	}
 
 	// 振り向いてる時にスマホを見ていたら減点
-	if (player_->IsLooking() && input->PushKey(DIK_E) && !isCaught_)
+	if (player_->IsInScreen() && player_->IsLooking() && input->PushKey(DIK_E) && !isCaught_)
 	{
 		catchTimer_ = 0.0f;
 
@@ -283,8 +300,9 @@ void GameScene::UpDate()
 
 	//イベント発生
 	if (!isEventActive_ &&
-		eventCount > 0 && 
-		gameTimer_ >= nextEventTime_&&
+		player_->IsReturned() &&
+		eventCount > 0 &&
+		gameTimer_ >= nextEventTime_ &&
 		player_->IsBackingWards()) {
 
 		isEventActive_ = true;

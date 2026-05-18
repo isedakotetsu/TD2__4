@@ -56,6 +56,10 @@ public:
 	bool IsFever() const { return isFever_; }
 
 	bool CanLook() const;
+
+	bool IsInScreen() const;
+
+	bool IsReturned() const;
 private:
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;

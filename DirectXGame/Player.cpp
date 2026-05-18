@@ -63,14 +63,39 @@ bool Player::GetIsReturning() const {
 
 //FEVERが始まるのを感知する関数
 void Player::StartFever() {
-	isFever_ = true;
-	feverTimer_ = 0.0f;
-	startPos_ = worldTransform_.translation_;
+    // FEVER中 or 戻り中は開始しない
+    if (isFever_ || isReturning_)
+    {
+        return;
+    }
+
+    isFever_ = true;
+    feverTimer_ = 0.0f;
+
+    startPos_ = worldTransform_.translation_;
 }
 
 
 bool Player::CanLook() const {
 	return !isFever_ && !isCaught_;
+}
+
+bool Player::IsInScreen() const
+{
+    Vector3 pos = worldTransform_.translation_;
+
+    // 画面内にいる範囲
+    if (pos.x > 69.0f &&pos.x < -0.1f)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool Player::IsReturned() const
+{
+    return worldTransform_.translation_.x >= 0.0f;
 }
 
 void Player::UpDate() {
@@ -87,6 +112,10 @@ void Player::UpDate() {
 
         if (worldTransform_.translation_.x >= 170.0f) {
 			worldTransform_.translation_.x = 170.0f;
+        }
+
+        if (worldTransform_.translation_.x == 0) {
+
         }
 
         if (feverTimer_ > 420.0f/60.0f) {
