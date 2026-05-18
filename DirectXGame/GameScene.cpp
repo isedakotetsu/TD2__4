@@ -59,7 +59,7 @@ void GameScene::Initialize()
 	timeDisplay_->Initialize();
 
 	//スコア表示
-	scoreDisplay_ = new Score(); 
+	scoreDisplay_ = new Score();
 	scoreDisplay_->Initialize();
 
 	//PCモデル
@@ -67,7 +67,7 @@ void GameScene::Initialize()
 
 	modelPc_ = Model::CreateFromOBJ("PC", true);
 
-	Vector3 PcPos= { 0.0f,0.0f,-2.3f };
+	Vector3 PcPos = { 0.0f,0.0f,-2.3f };
 
 	pc_->Initialize(modelPc_, &camera_, PcPos);
 
@@ -75,7 +75,7 @@ void GameScene::Initialize()
 	//ゲームgif
 	for (int i = 1; i <= 100; i++) {
 		char file[256];
-		sprintf_s(file, "gif_frames/frame_%03d.png", i);
+		sprintf_s(file, "gif_frames2/frame2_%03d.png", i);
 
 		if (!std::filesystem::exists(std::string("Resources/") + file)) {
 			break;
@@ -83,13 +83,13 @@ void GameScene::Initialize()
 
 		framesA_.push_back(TextureManager::Load(file));
 	}
-
+	
 	//勉強gif
 	for (int i = 1; i <= 100; i++) {
 		char file[256];
-		sprintf_s(file, "gif_frames2/frame2_%03d.png", i);
+		sprintf_s(file, "gif_frames/frame_%03d.png", i);
 
-		if (!std::filesystem::exists(std::string("Resources/") + file)) 
+		if (!std::filesystem::exists(std::string("Resources/") + file))
 		{
 			break;
 		}
@@ -101,15 +101,18 @@ void GameScene::Initialize()
 	currentFrames_ = &framesA_;
 	frameCount_ = static_cast<int>(currentFrames_->size());
 
-	if (!currentFrames_->empty()) 
+	if (!currentFrames_->empty())
 	{
 		sprite_ = Sprite::Create((*currentFrames_)[0], { 0, 0 });
 	}
 
 	upData = new UpData();
-	
 
-	gameTime = 7200  ; //ゲームプレイ時間
+	scoreCount_ = 100;
+
+	isCaught_ = false;
+
+	gameTime = 7200; //ゲームプレイ時間
 	gameTimer_ = 0;
 	isEventActive_ = false;
 	eventTimer_ = 0;
@@ -133,7 +136,7 @@ void GameScene::Initialize()
 	sumaho_ = new Sumaho();
 	sumahoModel_ = Model::CreateFromOBJ("sumaho", true); // フォルダ名を指定
 	Vector3 phonePos = { 0.0f,-1.0f,-3.0f };
-	sumaho_->Initialize(sumahoModel_, &camera_,phonePos);
+	sumaho_->Initialize(sumahoModel_, &camera_, phonePos);
 	modelCommon_ = ModelCommon::GetInstance();
 }
 
@@ -163,7 +166,7 @@ AABB GameScene::GetAABB() {
 void GameScene::UpDate()
 {
 
-	if(gameTime>0) 
+	if (gameTime > 0)
 	{
 		gameTime--;
 	}
@@ -185,11 +188,11 @@ void GameScene::UpDate()
 	scoreDisplay_->UpDate(score_);
 
 	Input* input = Input::GetInstance();
-// =====================
-// スコア加算
-// =====================
+	// =====================
+	// スコア加算
+	// =====================
 
-// ゲーム画面中なら毎フレーム加点
+	// ゲーム画面中なら毎フレーム加点
 	if (!isGifA_)
 	{
 		score_ += 1;
@@ -234,7 +237,8 @@ void GameScene::UpDate()
 				sprite_->SetTextureHandle(framesA_[0]);
 			}
 
-		} else {
+		}
+		else {
 			currentFrames_ = &framesB_;
 
 			if (!framesB_.empty()) {
@@ -251,13 +255,13 @@ void GameScene::UpDate()
 	static int timer = 0;
 	timer++;
 
-	if (currentFrames_ && !currentFrames_->empty()) 
+	if (currentFrames_ && !currentFrames_->empty())
 	{
 
 		if (timer % 3 == 0)
 		{
 			frameIndex_++;
-			if (frameIndex_ >= frameCount_) 
+			if (frameIndex_ >= frameCount_)
 			{
 				frameIndex_ = 0;
 			}
@@ -270,30 +274,31 @@ void GameScene::UpDate()
 	camera_.UpdateMatrix();
 
 	// GIFがB中に振り向いたら1回だけ減点
-	if (!isGifA_ && player_->IsInScreen() && player_->IsLooking() && !isCaught_)
+	if (!isGifA_ &&
+		player_->IsInScreen() &&
+		player_->IsLooking())
 	{
 		catchTimer_ = 0.0f;
 
-		score_ -= scoreCount_;
+		score_ -= 10;
 
 		if (score_ < 0) {
 			score_ = 0;
 		}
-
 	}
 
-	// 振り向いてる時にスマホを見ていたら減点
-	if (player_->IsInScreen() && player_->IsLooking() && input->PushKey(DIK_E) && !isCaught_)
+
+	if (player_->IsInScreen() &&
+		player_->IsLooking() &&
+		input->PushKey(DIK_E))
 	{
 		catchTimer_ = 0.0f;
 
-		score_ -= scoreCount_;
+		score_ -= 10;
 
 		if (score_ < 0) {
 			score_ = 0;
 		}
-
-		//isCaught_ = true;
 	}
 
 
@@ -322,7 +327,7 @@ void GameScene::UpDate()
 
 		if (eventTimer_ <= 0) {
 			isEventActive_ = false;
-			
+
 		}
 
 		// ランダムで色変更
@@ -332,13 +337,14 @@ void GameScene::UpDate()
 		flashColor_.w = 0.5f; // 透明度（0〜1）
 
 		flashSprite_->SetColor(flashColor_);
-	}else {
+	}
+	else {
 		// 通常時は透明
 		flashColor_ = { 1,1,1,0 };
 		flashSprite_->SetColor(flashColor_);
 	}
 
-	
+
 
 	// 目標の座標と回転
 	Vector3 targetPos;
@@ -368,7 +374,7 @@ void GameScene::UpDate()
 	//playerが座標を獲得する関数
 	Vector3 pos = player_->GetWorldPosition();
 
-	
+
 
 	//CController_->Updata();
 }
@@ -410,5 +416,5 @@ void GameScene::Draw()
 
 }
 
-	
+
 
