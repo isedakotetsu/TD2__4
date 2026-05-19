@@ -112,7 +112,7 @@ void GameScene::Initialize()
 
 	isCaught_ = false;
 
-	gameTime = 7200; //ゲームプレイ時間
+	gameTime = 4800; //ゲームプレイ時間
 	gameTimer_ = 0;
 	isEventActive_ = false;
 	eventTimer_ = 0;
