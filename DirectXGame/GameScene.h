@@ -16,6 +16,13 @@ using namespace KamataEngine;
 
 class GameScene {
 public:
+
+	enum class ResultRank {
+		kC,
+		kB,
+		kA,
+	};
+
 	void Initialize();
 
 	void UpDate();
@@ -45,7 +52,9 @@ public:
 	// AABBを取得
 	AABB GetAABB();
 
+	ResultRank GetResultRank() const { return resultRank_; }
 
+	void CheckResultRank();
 
 private:
 	// 02_12 4枚目 ゲームのフェーズ（型）
@@ -57,6 +66,10 @@ private:
 		kClear,   // クリア
 	};
 	Phase phase_;
+
+	
+
+	ResultRank resultRank_ = ResultRank::kC;
 
 	KamataEngine::Sprite* sprite_ = nullptr;
 

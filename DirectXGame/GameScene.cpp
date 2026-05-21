@@ -83,7 +83,7 @@ void GameScene::Initialize()
 
 		framesA_.push_back(TextureManager::Load(file));
 	}
-	
+
 	//勉強gif
 	for (int i = 1; i <= 100; i++) {
 		char file[256];
@@ -173,6 +173,8 @@ void GameScene::UpDate()
 	else
 	{
 		gameTime = 0;
+		// ランク決定
+		CheckResultRank();
 		phase_ = Phase::kDeath;
 	}
 
@@ -377,6 +379,19 @@ void GameScene::UpDate()
 
 
 	//CController_->Updata();
+}
+
+void GameScene::CheckResultRank()
+{
+	if (score_ >= 10000) {
+		resultRank_ = ResultRank::kA;
+	}
+	else if (score_ >= 5000) {
+		resultRank_ = ResultRank::kB;
+	}
+	else if (score_ >= 2000) {
+		resultRank_ = ResultRank::kC;
+	}
 }
 
 void GameScene::Draw()

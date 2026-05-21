@@ -65,11 +65,19 @@ void ChangeScene() {
 			// 死亡 or ゴール時の遷移
 			else {
 				if (gameScene->IsDead()) {
+					// ランク取得
+					gameScene->CheckResultRank();
+					auto rank = gameScene->GetResultRank();
 					scene = Scene::kGameOver;
 					delete gameScene;
 					gameScene = nullptr;
 					gameOverScene = new GameOver;
 					gameOverScene->Initialize();
+
+					// ランク渡す
+					gameOverScene->SetRank(
+						static_cast<GameOver::ResultRank>(rank)
+					);
 				}
 				else if (gameScene->IsClear()) {
 					scene = Scene::kGameClear;
