@@ -84,13 +84,7 @@ bool Player::IsInScreen() const
 {
     Vector3 pos = worldTransform_.translation_;
 
-    // 画面内にいる範囲
-    if (pos.x > 69.0f &&pos.x < -0.1f)
-    {
-        return true;
-    }
-
-    return false;
+    return pos.x > -0.1f && pos.x < 69.0f;
 }
 
 bool Player::IsReturned() const

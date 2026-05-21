@@ -15,6 +15,12 @@ public:
 
 	~GameOver();
 
+	enum class ResultRank {
+		kC,
+		kB,
+		kA,
+	};
+
 	void Initialize();
 
 	void UpDate();
@@ -23,8 +29,18 @@ public:
 
 	bool IsFinished() const { return finished_; }
 
+	// ランク設定
+	void SetRank(ResultRank rank);
 
 private:
+
+	ResultRank rank_ = ResultRank::kC;
+
+	Sprite* resultSprite_ = nullptr;
+
+	uint32_t textureA_;
+	uint32_t textureB_;
+	uint32_t textureC_;
 
 	bool finished_ = false;
 	Fade* fade_ = nullptr;
