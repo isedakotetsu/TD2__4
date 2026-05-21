@@ -1,6 +1,7 @@
 #pragma once
 #include <KamataEngine.h>
 #include "Fade.h"
+#include "Score.h"
 
 using namespace KamataEngine;
 
@@ -30,11 +31,16 @@ public:
 	bool IsFinished() const { return finished_; }
 
 	// ランク設定
-	void SetRank(ResultRank rank);
+	void SetRank(ResultRank rank, int score);
 
 private:
 
 	ResultRank rank_ = ResultRank::kC;
+
+	// スコア表示
+	int score_ = 0;
+	Score* scoreDisplay_ = nullptr;
+
 
 	Sprite* resultSprite_ = nullptr;
 

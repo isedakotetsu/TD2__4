@@ -6,6 +6,7 @@ GameOver::~GameOver()
 {
 	delete fade_;
 	delete resultSprite_;
+	delete scoreDisplay_;
 }
 
 void GameOver::Initialize() 
@@ -21,12 +22,24 @@ void GameOver::Initialize()
 	resultSprite_ = Sprite::Create(textureC_, { 0,0 });
 
 	resultSprite_->SetSize({ 1280,720 });
+
+	scoreDisplay_ = new Score();
+	scoreDisplay_->Initialize();
+	scoreDisplay_->SetPosition({ 350.0f, 250.0f });
+
+	
+	scoreDisplay_->SetSize({ 96.0f, 96.0f });
 }
 
 
-void GameOver::SetRank(ResultRank rank)
+void GameOver::SetRank(ResultRank rank, int score)
 {
 	rank_ = rank;
+	score_ = score;
+
+	if (scoreDisplay_) {
+		scoreDisplay_->UpDate(score_);
+	}
 
 	switch (rank_)
 	{
@@ -75,6 +88,10 @@ void GameOver::Draw() {
 
 	if (resultSprite_) {
 		resultSprite_->Draw();
+	}
+
+	if (scoreDisplay_) {
+		scoreDisplay_->Draw();
 	}
 
 	Sprite::PostDraw();

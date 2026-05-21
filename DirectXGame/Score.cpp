@@ -21,6 +21,14 @@ void Score::Initialize() {
 	}
 
 	score_ = 0;
+	position_ = { 50.0f, 50.0f };
+}
+void Score::SetPosition(const KamataEngine::Vector2& position) {
+	position_ = position;
+}
+
+void Score::SetSize(const KamataEngine::Vector2& size) {
+	size_ = size;
 }
 
 void Score::UpDate(int score) {
@@ -38,10 +46,12 @@ void Score::UpDate(int score) {
 	}
 
 	// 表示位置の設定（左上に表示する例）
-	float startX = 50.0f;
-	float y = 50.0f;
 	for (int i = 0; i < kMaxDigits; i++) {
-		spriteDigits_[i]->SetPosition({ startX + (i * 40.0f), y });
+		
+		spriteDigits_[i]->SetSize(size_);
+
+		float interval = size_.x + 10.0f; 
+		spriteDigits_[i]->SetPosition({ position_.x + (i * interval), position_.y });
 	}
 }
 

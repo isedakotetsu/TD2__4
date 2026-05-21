@@ -17,6 +17,10 @@ public:
 	// 描画
 	void Draw();
 
+	void SetPosition(const KamataEngine::Vector2& position);
+
+	void SetSize(const KamataEngine::Vector2& size);
+
 private:
 	// 0~9の数字テクスチャハンドル
 	uint32_t textureHandles_[10];
@@ -28,4 +32,8 @@ private:
 
 	// 現在のスコア
 	int score_;
+
+	KamataEngine::Vector2 position_;
+
+	KamataEngine::Vector2 size_ = { 48.0f, 48.0f };
 };

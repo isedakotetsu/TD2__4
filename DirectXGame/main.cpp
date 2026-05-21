@@ -68,6 +68,8 @@ void ChangeScene() {
 					// ランク取得
 					gameScene->CheckResultRank();
 					auto rank = gameScene->GetResultRank();
+					int finalScore = gameScene->GetScore();
+
 					scene = Scene::kGameOver;
 					delete gameScene;
 					gameScene = nullptr;
@@ -77,6 +79,7 @@ void ChangeScene() {
 					// ランク渡す
 					gameOverScene->SetRank(
 						static_cast<GameOver::ResultRank>(rank)
+						, finalScore
 					);
 				}
 				else if (gameScene->IsClear()) {

@@ -33,6 +33,8 @@ public:
 
 	Player* GetPlayer() const { return player_; } // プレイヤー取得関数を追加
 
+	int GetScore() const { return score_; }
+
 	//ポーズメニュー
 	bool IsPauseActive() const { return pauseMenuActive_; }
 	int GetPauseSelection() const { return pauseSelection_; }
