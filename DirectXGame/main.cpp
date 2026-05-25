@@ -7,6 +7,7 @@
 #include "imgui.h"
 #include "imgui_impl_dx12.h"
 #include "imgui_impl_win32.h"
+#include "BGM.h"
 
 using namespace KamataEngine;
 
@@ -23,69 +24,120 @@ enum class Scene {
 	kGameClear,
 };
 
+BGM* bgm_ = nullptr;
+
+uint32_t gamePlayBgmHandle_;
+uint32_t titleBgmHandle_;
+uint32_t gameClearBgmHandle_1;
+uint32_t gameClearBgmHandle_2;
+uint32_t gameClearBgmHandle_3;
+
 // 現在シーン（型）
 Scene scene = Scene::kTitle;
 
-void ChangeScene() {
+void ChangeScene() 
+{
 
-	switch (scene) {
+	switch (scene)
+	{
 	case Scene::kTitle:
+		if (!bgm_->IsPlaying()) {
+			bgm_->BGMPlay(titleBgmHandle_);
+		}
+
 		if (titleScene->IsFinished()) {
-			// シーン変更
+			
+			if (bgm_->IsPlaying()) {
+				bgm_->BGMStop();
+			}
+
 			scene = Scene::kGame;
+
 			delete titleScene;
 			titleScene = nullptr;
+
 			gameScene = new GameScene;
 			gameScene->Initialize();
 		}
 		break;
 
 	case Scene::kGame:
-		// 02_12 30枚目
-		if (gameScene->IsFinished()) {
-			//Player* player_ = gameScene->GetPlayer();
+		if (!bgm_->IsPlaying()) {
+			bgm_->BGMPlay(gamePlayBgmHandle_);
+		}
 
-			// ポーズメニューからリトライ or タイトル選択
+		if (gameScene->IsFinished()) 
+		{
+
 			if (gameScene->IsPauseActive()) {
+				bgm_->BGMStop();
+
 				if (gameScene->GetPauseSelection() == 0) {
-					// リトライ
 					delete gameScene;
 					gameScene = new GameScene;
 					gameScene->Initialize();
 				}
 				else if (gameScene->GetPauseSelection() == 1) {
-					// タイトル戻り
 					scene = Scene::kTitle;
 					delete gameScene;
 					gameScene = nullptr;
+
 					titleScene = new TitleScene;
 					titleScene->Initialize();
 				}
 			}
-			// 死亡 or ゴール時の遷移
 			else {
 				if (gameScene->IsDead()) {
-					// ランク取得
 					gameScene->CheckResultRank();
+
 					auto rank = gameScene->GetResultRank();
 					int finalScore = gameScene->GetScore();
+
+					bgm_->BGMStop();
+
+					if (rank == GameScene::ResultRank::kA) {
+						bgm_->BGMPlay(gameClearBgmHandle_1);
+					}
+					else if (rank == GameScene::ResultRank::kB) {
+						bgm_->BGMPlay(gameClearBgmHandle_2);
+					}
+					else {
+						bgm_->BGMPlay(gameClearBgmHandle_3);
+					}
 
 					scene = Scene::kGameOver;
 					delete gameScene;
 					gameScene = nullptr;
+
 					gameOverScene = new GameOver;
 					gameOverScene->Initialize();
 
-					// ランク渡す
 					gameOverScene->SetRank(
-						static_cast<GameOver::ResultRank>(rank)
-						, finalScore
+						static_cast<GameOver::ResultRank>(rank),
+						finalScore
 					);
 				}
 				else if (gameScene->IsClear()) {
+					gameScene->CheckResultRank();
+
+					auto rank = gameScene->GetResultRank();
+
+					bgm_->BGMStop();
+
+					if (rank == GameScene::ResultRank::kA) {
+						bgm_->BGMPlay(gameClearBgmHandle_1);
+					}
+					else if (rank == GameScene::ResultRank::kB) {
+						bgm_->BGMPlay(gameClearBgmHandle_2);
+					}
+					else {
+						bgm_->BGMPlay(gameClearBgmHandle_3);
+					}
+
 					scene = Scene::kGameClear;
 					delete gameScene;
 					gameScene = nullptr;
+
 					gameClearScene = new GameClear;
 					gameClearScene->Initialize();
 				}
@@ -95,20 +147,25 @@ void ChangeScene() {
 
 	case Scene::kGameOver:
 		if (gameOverScene->IsFinished()) {
+			bgm_->BGMStop();
+
 			scene = Scene::kTitle;
 			delete gameOverScene;
 			gameOverScene = nullptr;
+
 			titleScene = new TitleScene;
 			titleScene->Initialize();
 		}
-
 		break;
 
 	case Scene::kGameClear:
 		if (gameClearScene->IsFinished()) {
+			bgm_->BGMStop();
+
 			scene = Scene::kTitle;
 			delete gameClearScene;
 			gameClearScene = nullptr;
+
 			titleScene = new TitleScene;
 			titleScene->Initialize();
 		}
@@ -149,6 +206,16 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	titleScene = new TitleScene;
 	titleScene->Initialize();
+
+	gamePlayBgmHandle_ = Audio::GetInstance()->LoadWave("./BGM/gameplay.mp3");
+	titleBgmHandle_ = Audio::GetInstance()->LoadWave("./BGM/title.mp3");
+	gameClearBgmHandle_1 = Audio::GetInstance()->LoadWave("./BGM/gametop.mp3");
+	gameClearBgmHandle_2 = Audio::GetInstance()->LoadWave("./BGM/ClearCenter.mp3");
+	gameClearBgmHandle_3 = Audio::GetInstance()->LoadWave("./BGM/gamebottom.mp3");
+
+
+	bgm_ = new BGM();
+	bgm_->Initialize();
 
 	const int width = 1280;
 	const int height = 720;

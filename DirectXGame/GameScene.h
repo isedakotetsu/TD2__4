@@ -8,7 +8,7 @@
 #include "Table.h"
 #include "Time.h"
 #include "Score.h"
-
+#include "BGM.h"
 #include "CameraController.h"
 #include "Sumaho.h"
 
@@ -164,4 +164,11 @@ private:
 	Score* scoreDisplay_ = nullptr;
 
 	float rotY;
+
+	BGM* bgm_ = nullptr;
+	uint32_t gameClearBgmHandle_1;
+	uint32_t gameClearBgmHandle_2;
+	uint32_t gameClearBgmHandle_3;
+	uint32_t click_;
+	
 };

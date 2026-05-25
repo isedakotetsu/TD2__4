@@ -138,6 +138,13 @@ void GameScene::Initialize()
 	Vector3 phonePos = { 0.0f,-1.0f,-3.0f };
 	sumaho_->Initialize(sumahoModel_, &camera_, phonePos);
 	modelCommon_ = ModelCommon::GetInstance();
+
+	//BGM
+	gameClearBgmHandle_1 = Audio::GetInstance()->LoadWave("./BGM/gametop.mp3");
+	gameClearBgmHandle_2 = Audio::GetInstance()->LoadWave("./BGM/ClearCenter.mp3");
+	gameClearBgmHandle_3 = Audio::GetInstance()->LoadWave("./BGM/gamebottom.mp3");
+	click_ = Audio::GetInstance()->LoadWave("./BGM/click.mp3");
+	
 }
 
 Vector3 GameScene::GetWorldPosition() const {
@@ -227,9 +234,12 @@ void GameScene::UpDate()
 	}
 
 	//画面切り替え
-	//spaceキーを押したらゲームGIFと勉強GIFを切り替える
+	// spaceキーを押したらゲームGIFと勉強GIFを切り替える
 	if (KamataEngine::Input::GetInstance()->TriggerKey(DIK_SPACE))
 	{
+		// クリック音再生
+		Audio::GetInstance()->PlayWave(click_, false);
+
 		isGifA_ = !isGifA_;
 
 		if (isGifA_) {
@@ -238,14 +248,12 @@ void GameScene::UpDate()
 			if (!framesA_.empty()) {
 				sprite_->SetTextureHandle(framesA_[0]);
 			}
-
 		}
 		else {
 			currentFrames_ = &framesB_;
 
 			if (!framesB_.empty()) {
 				sprite_->SetTextureHandle(framesB_[0]);
-
 			}
 		}
 
@@ -389,7 +397,7 @@ void GameScene::CheckResultRank()
 	else if (score_ >= 5000) {
 		resultRank_ = ResultRank::kB;
 	}
-	else if (score_ >= 2000) {
+	else {
 		resultRank_ = ResultRank::kC;
 	}
 }
