@@ -75,7 +75,7 @@ private:
 
 	KamataEngine::Sprite* sprite_ = nullptr;
 
-	//////3Dモデル
+	//3Dモデル
 	KamataEngine::Model* model_ = nullptr;
 
 	//KamataEngine::Model* playerModel_ = nullptr;

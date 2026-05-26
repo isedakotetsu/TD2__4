@@ -6,6 +6,8 @@ using namespace KamataEngine;
 Explanation::~Explanation() {
 	delete fade_;
     fade_ = nullptr;
+
+	delete sprite_;
 }
 
 void Explanation::Initialize()
@@ -13,6 +15,13 @@ void Explanation::Initialize()
 	fade_ = new Fade();
 	fade_->Initialize();
 	fade_->Start(Fade::Status::FadeIn, 1.0f);
+
+	texturehandle_ = TextureManager::Load("backGround/explanation.png");
+
+	sprite_ = Sprite::Create(texturehandle_, { 0,0 });
+
+	sprite_->SetSize({ 1280,720 });
+
 }
 
 void Explanation::UpDate()
@@ -41,5 +50,13 @@ void Explanation::UpDate()
 
 void Explanation::Draw()
 {
+	Sprite::PreDraw();
+
+	if (sprite_) {
+		sprite_->Draw();
+	}
+	Sprite::PostDraw();
+
+
 	fade_->Draw();
 }
