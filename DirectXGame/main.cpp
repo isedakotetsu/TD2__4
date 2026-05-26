@@ -31,9 +31,12 @@ BGM* bgm_ = nullptr;
 
 uint32_t gamePlayBgmHandle_;
 uint32_t titleBgmHandle_;
+uint32_t explanationBgmHandle_;
 uint32_t gameClearBgmHandle_1;
 uint32_t gameClearBgmHandle_2;
 uint32_t gameClearBgmHandle_3;
+
+bool isExplanationBgmPlayed = false;
 
 // 現在シーン（型）
 Scene scene = Scene::kTitle;
@@ -49,12 +52,15 @@ void ChangeScene()
 		}
 
 		if (titleScene->IsFinished()) {
-			
+
 			if (bgm_->IsPlaying()) {
 				bgm_->BGMStop();
 			}
 
 			scene = Scene::kExplanation;
+
+			// ← 追加
+			isExplanationBgmPlayed = false;
 
 			delete titleScene;
 			titleScene = nullptr;
@@ -65,10 +71,26 @@ void ChangeScene()
 		break;
 
 	case Scene::kExplanation:
+
+		if (!isExplanationBgmPlayed) {
+
+			
+			Audio::GetInstance()->PlayWave(explanationBgmHandle_, false);
+
+			isExplanationBgmPlayed = true;
+		}
+
 		if (explanationScene->IsFinished()) {
+
+			if (bgm_->IsPlaying()) {
+				bgm_->BGMStop();
+			}
+
 			scene = Scene::kGame;
+
 			delete explanationScene;
 			explanationScene = nullptr;
+
 			gameScene = new GameScene;
 			gameScene->Initialize();
 		}
@@ -228,6 +250,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	gameClearBgmHandle_1 = Audio::GetInstance()->LoadWave("./BGM/gametop.mp3");
 	gameClearBgmHandle_2 = Audio::GetInstance()->LoadWave("./BGM/ClearCenter.mp3");
 	gameClearBgmHandle_3 = Audio::GetInstance()->LoadWave("./BGM/gamebottom.mp3");
+	explanationBgmHandle_ = Audio::GetInstance()->LoadWave("./BGM/gamesetumei.mp3");
+	
 
 
 	bgm_ = new BGM();

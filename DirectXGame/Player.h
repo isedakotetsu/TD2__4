@@ -3,7 +3,7 @@
 #include "UpData.h"
 #include <cmath>
 #include <ctime>
-
+#include "BGM.h"
 class Player {
 public:
 
@@ -109,4 +109,8 @@ private:
 	float feverTimer_ = 0.0f;
 	KamataEngine::Vector3 startPos_;
 	bool isReturning_ = false;
+
+	BGM* bgm_ = nullptr;
+	uint32_t lookingBgmHandle;
+	uint32_t lookingVoice_ = 0;
 };

@@ -25,6 +25,8 @@ void Player::Initialize(Model* model, Camera* camera, const Vector3& position) {
 	idleCooldown_ = kIdleCooldownMin +
 		(float(rand()) / RAND_MAX) *
 		(kIdleCooldownMax - kIdleCooldownMin);
+
+	lookingBgmHandle = Audio::GetInstance()->LoadWave("./BGM/hurimuki.mp3");
 }
 Vector3 Player::GetWorldPosition() const {
 
@@ -200,7 +202,14 @@ void Player::UpDate() {
         } break;
 
         case LookState::kLooking:
-            if (lookTimer_ >= kLookingTime) {
+            if (!Audio::GetInstance()->IsPlaying(lookingVoice_))
+            {
+                lookingVoice_ =
+                    Audio::GetInstance()->PlayWave(lookingBgmHandle, false);
+            }
+            if (lookTimer_ >= kLookingTime)
+            {
+                
                 lookTimer_ = 0.0f;
                 lookState_ = LookState::kLookEnd;
             }
