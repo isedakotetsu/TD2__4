@@ -8,10 +8,12 @@
 #include "imgui_impl_dx12.h"
 #include "imgui_impl_win32.h"
 #include "BGM.h"
+#include "Explanation.h"
 
 using namespace KamataEngine;
 
 TitleScene* titleScene = nullptr;
+Explanation* explanationScene = nullptr;
 GameScene* gameScene = nullptr;
 GameClear* gameClearScene = nullptr;
 GameOver* gameOverScene = nullptr;
@@ -19,6 +21,7 @@ GameOver* gameOverScene = nullptr;
 enum class Scene {
 	kUnknown = 0,
 	kTitle,
+	kExplanation,
 	kGame,
 	kGameOver,
 	kGameClear,
@@ -51,11 +54,21 @@ void ChangeScene()
 				bgm_->BGMStop();
 			}
 
-			scene = Scene::kGame;
+			scene = Scene::kExplanation;
 
 			delete titleScene;
 			titleScene = nullptr;
 
+			explanationScene = new Explanation;
+			explanationScene->Initialize();
+		}
+		break;
+
+	case Scene::kExplanation:
+		if (explanationScene->IsFinished()) {
+			scene = Scene::kGame;
+			delete explanationScene;
+			explanationScene = nullptr;
 			gameScene = new GameScene;
 			gameScene->Initialize();
 		}
@@ -178,6 +191,9 @@ void DrawScene() {
 	case Scene::kTitle:
 		titleScene->Draw();
 		break;
+	case Scene::kExplanation:
+		explanationScene->Draw();
+		break;
 	case Scene::kGame:
 		gameScene->Draw();
 		break;
@@ -229,9 +245,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		if (Update()) {
 			break;
 		}
-		ImGui_ImplDX12_NewFrame();
-		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();
 
 
 		// シーンごとにUpdate
@@ -239,17 +252,13 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		case Scene::kTitle:
 			titleScene->UpDate();
 			break;
+
+		case Scene::kExplanation:
+			explanationScene->UpDate();
+			break;
+
 		case Scene::kGame:
 			// ImGuiの開始処理
-
-			// 開発用UIの処理。実際に開発用のUIを出す場合はここをゲーム固有の処理に置き換える
-			ImGui::ShowDemoWindow();
-			ImGui::Begin("Debug Info");
-
-			ImGui::Text("rotationY: %.2f", gameScene->GetPlayer()->GetRotationY());
-			ImGui::Text("translation: %.2f", gameScene->GetPlayer()->GetTranslationX());
-			ImGui::Text("Returning: %s", gameScene->GetPlayer()->GetIsReturning() ? "true" : "false");
-			ImGui::End();
 			gameScene->UpDate();
 
 			break;
@@ -268,10 +277,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		dxCommon->PreDraw();
 
 		DrawScene();
-
-		ImGui::Render();
-		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), dxCommon->GetCommandList());
-
 
 		// 描画終了
 		dxCommon->PostDraw();

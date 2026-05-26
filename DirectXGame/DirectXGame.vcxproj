@@ -165,6 +165,7 @@
   <ItemGroup>
     <ClCompile Include="BGM.cpp" />
     <ClCompile Include="CameraController.cpp" />
+    <ClCompile Include="Explanation.cpp" />
     <ClCompile Include="Fade.cpp" />
     <ClCompile Include="GameClear.cpp" />
     <ClCompile Include="GameOver.cpp" />
@@ -281,6 +282,7 @@
   <ItemGroup>
     <ClInclude Include="BGM.h" />
     <ClInclude Include="CameraController.h" />
+    <ClInclude Include="Explanation.h" />
     <ClInclude Include="Fade.h" />
     <ClInclude Include="GameClear.h" />
     <ClInclude Include="GameOver.h" />
