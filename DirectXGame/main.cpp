@@ -239,8 +239,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	// DirectXCommonインスタンスの取得
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 
-	/*gameScene = new GameScene;
-	gameScene->Initialize();*/
 
 	titleScene = new TitleScene;
 	titleScene->Initialize();
