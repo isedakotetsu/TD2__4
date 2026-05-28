@@ -144,7 +144,12 @@ void GameScene::Initialize()
 	gameClearBgmHandle_2 = Audio::GetInstance()->LoadWave("./BGM/ClearCenter.mp3");
 	gameClearBgmHandle_3 = Audio::GetInstance()->LoadWave("./BGM/gamebottom.mp3");
 	click_ = Audio::GetInstance()->LoadWave("./BGM/click.mp3");
-	
+
+	uint32_t haikeiTextureHandle_ = TextureManager::Load("school.png");
+	haikei_ = Sprite::Create(haikeiTextureHandle_, { 0, 0 });
+
+	haikei_->SetSize({ 1280, 720 });
+	haikei_->SetPosition({ 0, 0 });
 }
 
 Vector3 GameScene::GetWorldPosition() const {
@@ -408,6 +413,7 @@ void GameScene::Draw()
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 
 	Sprite::PreDraw();
+	haikei_->Draw();
 	// フラッシュ描画
 	flashSprite_->Draw();
 	Sprite::PostDraw();
@@ -424,6 +430,7 @@ void GameScene::Draw()
 	Model::PostDraw();
 
 	Sprite::PreDraw();
+	
 	sprite_->Draw();
 
 	// 時間表示

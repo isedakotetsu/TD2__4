@@ -74,6 +74,7 @@ private:
 	ResultRank resultRank_ = ResultRank::kC;
 
 	KamataEngine::Sprite* sprite_ = nullptr;
+	KamataEngine::Sprite* haikei_ = nullptr;
 
 	//3Dモデル
 	KamataEngine::Model* model_ = nullptr;
