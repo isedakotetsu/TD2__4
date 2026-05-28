@@ -234,7 +234,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	
 
 	// エンジンの初期化
-	Initialize(L"先生にばれずにさぼる");
+	Initialize(L"先生こっちみんな");
 
 	// DirectXCommonインスタンスの取得
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
