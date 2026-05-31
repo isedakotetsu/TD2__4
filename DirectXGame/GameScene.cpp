@@ -115,9 +115,10 @@ void GameScene::Initialize()
 	gameTime = 4800; //ゲームプレイ時間
 	gameTimer_ = 0;
 	isEventActive_ = false;
+	eventCount = 1;
 	eventTimer_ = 0;
 	// 最初のイベント時間をランダム設定（例：3秒〜10秒）
-	nextEventTime_ = rand() % 3600 + 3200; // 180〜600フレーム
+	nextEventTime_ = rand() % 1800+600; // 180〜600フレーム
 	//nextEventTime_ = rand() % 420 + 180; // 180〜600フレーム
 	flashSprite_ = Sprite::Create(0, { 0, 0 });
 

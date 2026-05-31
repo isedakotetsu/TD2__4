@@ -151,7 +151,7 @@ private:
 
 	int gameTime = 3600; //ゲームプレイ時間
 	int nextEventTime_ = 0;     // 次に発生する時間
-	int eventCount = 3;  //イベント回数
+	int eventCount = 1;  //イベント回数
 	bool isEventActive_ = false; //イベントが発生するフラグ
 	int eventTimer_ = 0; //イベント継続時間
 
