@@ -15,9 +15,9 @@ void GameOver::Initialize()
 	fade_->Initialize();
 	fade_->Start(Fade::Status::FadeIn, 2.0f);
 
-	textureC_ = TextureManager::Load("backGround/backGround.png");
-	textureA_ = TextureManager::Load("backGround/backGround2.png");
-	textureB_ = TextureManager::Load("backGround/backGround3.png");
+	textureA_ = TextureManager::Load("backGround/high.png");
+	textureB_ = TextureManager::Load("backGround/middle.png");
+	textureC_ = TextureManager::Load("backGround/low.png");
 
 	resultSprite_ = Sprite::Create(textureC_, { 0,0 });
 
