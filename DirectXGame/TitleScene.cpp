@@ -4,6 +4,7 @@ using namespace KamataEngine;
 
 TitleScene::~TitleScene() {
 	delete fade_;
+	delete sprite_;
 }
 
 void TitleScene::Initialize() 
@@ -12,6 +13,12 @@ void TitleScene::Initialize()
 	fade_ = new Fade();
 	fade_->Initialize();
 	fade_->Start(Fade::Status::FadeIn, 1.0f);
+
+	textureHandle_ = TextureManager::Load("backGround/title.png");
+
+	sprite_ = Sprite::Create(textureHandle_, { 0,0 });
+
+	sprite_->SetSize({ 1280,720 });
 }
 
 void TitleScene::UpDate() 
@@ -42,5 +49,13 @@ void TitleScene::UpDate()
 
 void TitleScene::Draw() 
 {
+	Sprite::PreDraw();
+	
+	if (sprite_) {
+		sprite_->Draw();
+	}
+
+	Sprite::PostDraw();
+
 	fade_->Draw();
 }
