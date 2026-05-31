@@ -16,7 +16,7 @@ void Explanation::Initialize()
 	fade_->Initialize();
 	fade_->Start(Fade::Status::FadeIn, 1.0f);
 
-	texturehandle_ = TextureManager::Load("backGround/explanation.png");
+	texturehandle_ = TextureManager::Load("backGround/setumei.png");
 
 	sprite_ = Sprite::Create(texturehandle_, { 0,0 });
 
