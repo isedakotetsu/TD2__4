@@ -1,6 +1,6 @@
 #include "PC.h"
 #include <filesystem> 
-
+#include <cassert>
 
 void PC::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3& position)
 {

@@ -1,6 +1,7 @@
 #include "playerHandLeft.h"
 #include <cmath>
 #include <cstdlib> 
+#include <cassert>
 
 void PlayerHandLeft::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3& position)
 {

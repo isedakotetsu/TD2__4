@@ -1,5 +1,6 @@
 #include "Table.h"
 #include <filesystem> 
+#include <cassert>
 
 
 void Table::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3& position)
