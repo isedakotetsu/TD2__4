@@ -39,9 +39,9 @@ void GameScene::Initialize()
 	//debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 	player_ = new Player();
 
-	modelPlayer_ = Model::CreateFromOBJ("player2", true);
+	modelPlayer_ = Model::CreateFromOBJ("ningen", true);
 
-	Vector3 playerPos = { 0.0f,0.0f,40.0f };
+	Vector3 playerPos = { 0.0f,-30.0f,40.0f };
 
 	player_->Initialize(modelPlayer_, &camera_, playerPos);
 

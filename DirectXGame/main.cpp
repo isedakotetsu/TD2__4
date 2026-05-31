@@ -36,6 +36,9 @@ uint32_t gameClearBgmHandle_1;
 uint32_t gameClearBgmHandle_2;
 uint32_t gameClearBgmHandle_3;
 
+uint32_t explanationPlayingHandle_ = 0;
+bool isTitleBgmPlayed = false;
+
 bool isExplanationBgmPlayed = false;
 
 // 現在シーン（型）
@@ -47,19 +50,18 @@ void ChangeScene()
 	switch (scene)
 	{
 	case Scene::kTitle:
-		if (!bgm_->IsPlaying()) {
+		if (!isTitleBgmPlayed) {
 			bgm_->BGMPlay(titleBgmHandle_);
+			isTitleBgmPlayed = true;
 		}
 
 		if (titleScene->IsFinished()) {
 
-			if (bgm_->IsPlaying()) {
-				bgm_->BGMStop();
-			}
+			bgm_->BGMStop();
+			isTitleBgmPlayed = false;
 
 			scene = Scene::kExplanation;
 
-			// ← 追加
 			isExplanationBgmPlayed = false;
 
 			delete titleScene;
@@ -73,17 +75,16 @@ void ChangeScene()
 	case Scene::kExplanation:
 
 		if (!isExplanationBgmPlayed) {
-
-			
-			Audio::GetInstance()->PlayWave(explanationBgmHandle_, false);
+			explanationPlayingHandle_ =
+				Audio::GetInstance()->PlayWave(explanationBgmHandle_, false);
 
 			isExplanationBgmPlayed = true;
 		}
 
 		if (explanationScene->IsFinished()) {
-
-			if (bgm_->IsPlaying()) {
-				bgm_->BGMStop();
+			if (explanationPlayingHandle_ != 0) {
+				Audio::GetInstance()->StopWave(explanationPlayingHandle_);
+				explanationPlayingHandle_ = 0;
 			}
 
 			scene = Scene::kGame;
@@ -185,6 +186,7 @@ void ChangeScene()
 			bgm_->BGMStop();
 
 			scene = Scene::kTitle;
+			isTitleBgmPlayed = false;
 			delete gameOverScene;
 			gameOverScene = nullptr;
 
@@ -198,6 +200,7 @@ void ChangeScene()
 			bgm_->BGMStop();
 
 			scene = Scene::kTitle;
+			isTitleBgmPlayed = false;
 			delete gameClearScene;
 			gameClearScene = nullptr;
 
