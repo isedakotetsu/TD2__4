@@ -237,7 +237,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	
 
 	// エンジンの初期化
-	Initialize(L"せんせいこっちみんな");
+	Initialize(L"3167_せんせいこっちみんな");
 
 	// DirectXCommonインスタンスの取得
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
